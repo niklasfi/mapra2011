@@ -66,7 +66,7 @@ void quadsolv(double p, double q){
 		root = sqrt( real * (p/4*p-q) );
 	}
 	if ( root == 0 ){
-		return Ergebnis( 1, false, root);
+		return Ergebnis( 1, false, -p/2);
 	}
 	else if ( real == 1){
 		double x = - p/2 - (p>0?1:-1) * root;
