@@ -7,9 +7,7 @@
 *  Sprache    : C++                                                 *
 ********************************************************************/
 
-#ifndef unit2
-#define unit2
-
+#pragma once
 #include <iostream>
 
 // Konstanten
@@ -21,5 +19,3 @@ extern const int AnzahlBeispiele;
 void start(const unsigned int beispiel, unsigned int &laenge, unsigned int *&feld);
 bool ergebnis(unsigned int *feld);
 void tausche(unsigned int *feld, const long int i, const long int j);
-
-#endif
