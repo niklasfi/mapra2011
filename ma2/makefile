@@ -1,10 +1,18 @@
+gpp=g++ -Wall
 objects = quicksort.o
 
+ifeq ($(shell uname -p | grep -o "64"),64)
+	ARCH=64
+else
+	ARCH=32
+endif
+
 run.exe: unit2.cpp $(objects)
-	g++ -o run.exe unit2.cpp $(objects) gcc-32bit/unit2.o
+	$(gpp) -o run.exe unit2.cpp $(objects) gcc-${ARCH}bit/unit2.o
 	
-quicksort.o: quicksort.cpp quicksort.h
-	g++ -c quicksort.cpp
-	
+%.o: %.cpp
+	$(gpp) -c $<
+
+
 clean: 
 	rm run.exe $(objects)
