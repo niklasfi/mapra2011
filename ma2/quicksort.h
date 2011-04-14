@@ -2,7 +2,6 @@
 
 typedef unsigned int uint;
 
-#include <iostream>
 #include "unit2.h"
 
 void quicksort(uint l, uint *feld);
