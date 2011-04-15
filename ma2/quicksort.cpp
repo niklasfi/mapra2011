@@ -2,11 +2,23 @@
 
 typedef unsigned int uint;
 
-void quicksort(int lbound, int rbound, uint* f){
+void quicksort(int lbound, int rbound, uint* f, bool median){
 	if(lbound>=rbound) return;
 
-	int l = lbound; int r = rbound -1;
+	if( median && lbound < lbound){
+		int center = (rbound-lbound)/2;
 
+		uint markers[]={lbound,center,rbound,333};
+		print(14,f,markers);
+
+		if(f[lbound] > f[rbound]) tausche(f,lbound,rbound);		
+		if(f[center] < f[lbound]) tausche(f,center,lbound); // jetzt sind die ersten beiden Werte sortiert
+		if(f[center] < f[rbound]) tausche(f,center,rbound); // falls f[center] wirklich mittlerer wert, ans ende tauschen
+		print(14,f);
+	}
+
+	int l = lbound; int r = rbound -1;
+	
 	uint pivot = f[rbound];
 
 	do{
@@ -17,10 +29,10 @@ void quicksort(int lbound, int rbound, uint* f){
 
 	if(f[l]>pivot) tausche(f,l,rbound);
 
-	quicksort(lbound,l-1,f);
-	quicksort(l+1,rbound,f);
+	quicksort(lbound,l-1,f,median);
+	quicksort(l+1,rbound,f,median);
 }
 
-void quicksort(uint length, uint *feld){
-	quicksort(0,length-1,feld);
+void quicksort(uint length, uint *feld,bool median){
+	quicksort(0,length-1,feld,median);
 }
