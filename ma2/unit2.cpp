@@ -13,20 +13,20 @@ int main(){
 	
 	uint fastlen;
 	std::cout << "länge für schnelle algorithmen\n";
-	std::cin >> fastlen
+	std::cin >> fastlen;
 	
 	for(uint bsp = 1; bsp < 6; bsp++){
 		uint *feld;
-		start( bsp, slowlen, feld); selectionsort(l,feld); results[bsp*5] = ergebnis(feld);
+		start( bsp, slowlen, feld); mergesort(slowlen,feld); results[bsp*5] = ergebnis(feld);
 		
 		
-		insertionsort(l,feld); results[bsp*5 + 1] = ergebnis(feld);
+		//insertionsort(slowlen,feld); results[bsp*5 + 1] = ergebnis(feld);
 		
 		//heapsort(l,feld);
 		//print(l,feld);
 		
-		quicksort(l,feld,true);
-		ergebnis(feld);
+		//quicksort(l,feld,true);
+		//ergebnis(feld);
 	}
 }
 

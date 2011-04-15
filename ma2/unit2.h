@@ -19,6 +19,7 @@ typedef unsigned int uint;
 #include "insertionsort.h"
 #include "selectionsort.h"
 #include "heapsort.h"
+#include "mergesort.h"
 
 // Konstanten
 
