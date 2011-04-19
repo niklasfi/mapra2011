@@ -5,16 +5,27 @@ typedef unsigned int uint;
 void quicksort(int lbound, int rbound, uint* f, bool median){
 	if(lbound>=rbound) return;
 
-	if( median && lbound < lbound){
+	if( median && lbound < rbound){
 		int center = (rbound-lbound)/2;
-
-		uint markers[]={lbound,center,rbound,333};
-		print(14,f,markers);
-
-		if(f[lbound] > f[rbound]) tausche(f,lbound,rbound);		
-		if(f[center] < f[lbound]) tausche(f,center,lbound); // jetzt sind die ersten beiden Werte sortiert
-		if(f[center] < f[rbound]) tausche(f,center,rbound); // falls f[center] wirklich mittlerer wert, ans ende tauschen
-		print(14,f);
+		int &a = lbound;
+		int &b = center;
+		int &c = rbound;
+		if(a>b)
+			if(b>c)
+				tausche(f,b,rbound);
+			else
+				if(a>c)
+					tausche(f,c,rbound);
+				else
+					tausche(f,a,rbound);
+		else
+			if(b>c)
+				if(a>c)
+					tausche(f,a,rbound);
+				else
+					tausche(f,c,rbound);
+			else
+				tausche(f,b,rbound);
 	}
 
 	int l = lbound; int r = rbound -1;
