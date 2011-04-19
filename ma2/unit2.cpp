@@ -4,30 +4,13 @@
 typedef unsigned int uint;
 
 int main(){
-
-	bool* results = new bool[5*5];
-
-	uint slowlen;
-	std::cout << "länge für langsme algorithmen\n";
-	std::cin >> slowlen;
-	
-	uint fastlen;
-	std::cout << "länge für schnelle algorithmen\n";
-	std::cin >> fastlen;
-	
-	for(uint bsp = 1; bsp < 6; bsp++){
-		uint *feld;
-		start( bsp, slowlen, feld); mergesort(slowlen,feld); results[bsp*5] = ergebnis(feld);
-		
-		
-		//insertionsort(slowlen,feld); results[bsp*5 + 1] = ergebnis(feld);
-		
-		//heapsort(l,feld);
-		//print(l,feld);
-		
-		//quicksort(l,feld,true);
-		//ergebnis(feld);
-	}
+		uint* feld;
+		for(uint i = 1; i <6;  i++){
+			uint len = 1000;
+			start( i, len, feld);
+			selectionsort(len,feld);
+			ergebnis(feld);
+		}
 }
 
 void print(const uint &l, uint *&feld, uint *markers){
