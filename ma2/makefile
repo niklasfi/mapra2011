@@ -1,5 +1,5 @@
 gpp=g++ -Wall
-objects = quicksort.o bubblesort.o insertionsort.o selectionsort.o heapsort.o mergesort.o
+objects = unit2.o quicksort.o bubblesort.o insertionsort.o selectionsort.o heapsort.o mergesort.o
 dbg= -g
 
 ifeq ($(shell uname -p | grep -o "64"),64)
@@ -9,7 +9,7 @@ else
 endif
 
 run.exe: unit2.cpp $(objects)
-	$(gpp) $(dbg) -o run.exe unit2.cpp $(objects) gcc-${ARCH}bit/unit2.o
+	$(gpp) $(dbg) -o run.exe $(objects) gcc-${ARCH}bit/unit2.o
 	
 %.o: %.cpp
 	$(gpp) $(dbg) -c $<
