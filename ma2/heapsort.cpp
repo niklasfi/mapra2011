@@ -30,12 +30,9 @@ void heapify(uint length, uint *f){
 void heapsort(uint length, uint *f){
 	heapify(length,f);
 	
-	std::cout << "\nheapify zu Ende\n";
-	
-	uint left = length;
-	while (left > 0){
-		--left;
-		tausche(f,0, left);
-		versickern(left,f,1);
+	while (length > 0){
+		--length;
+		tausche(f,0, length);
+		versickern(length,f,1);
 	}
 }
