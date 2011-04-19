@@ -2,46 +2,32 @@
 
 typedef unsigned int uint;
 
-void mergesort(int length,uint* liste){
+void mergesort(uint length,uint* liste){
 
-	if(length > 1){
+	if(length <= 1)
+		return;
+	
+	uint llen = length / 2;
+	uint rlen = length - llen;
+	
+	mergesort(llen,liste);
+	mergesort(rlen,liste+llen);
+	
+	uint* llist = new uint[llen];
+	for(uint i = 0; i<llen; i++)
+		llist[i] = liste[i];
+		
+	uint* rlist = new uint[rlen];
+	for(uint i = 0; i<rlen; i++)
+		rlist[i] = liste[i+llen];
 
-		uint* h1 = new uint[length/2];
-		uint* h2 = new uint[(length + 1)/2];
-		int i;
-		for(i = 0; i < length/2; ++i)
-			h1[i] = liste[i];
-		for(i = length/2; i < length; ++i)
-			h2[i - length/2] = liste[i];
-
-		mergesort(length/2,h1);
-		mergesort((length + 1)/2,h2);
-
-		uint *p1 = &h1[0];
-		uint *p2 = &h2[0];
-		bool fertig1 = false;
-		bool fertig2 = false;
-		for(i = 0; i < length; ++i){
-			if(*p1 <= *p2 && !fertig1){
-				liste[i] = *p1;
-				if(p1 == &h1[length/2 - 1]){
-					fertig1 = true;
-				}
-				else{
-					++p1;
-				}
-			}
-			else if (!fertig2){
-				liste[i] = *p2;
-				if(p2 == &h2[(length + 1)/2 - 1]){
-					fertig2 = true;
-				}
-				else{
-					++p2;
-				}
-			}
-		}
-	}
+	uint l = 0; uint r = 0;
+	for(uint i = 0; i < length; i++)
+		if((l<llen && llist[l]<rlist[r]) || r>=rlen)
+			liste[i]=llist[l++];
+		else
+			liste[i]=rlist[r++];
+			
 }
 
 
