@@ -3,14 +3,14 @@
 typedef unsigned int uint;
 
 void quicksort(int lbound, int rbound, uint* f, bool median){
-	if(lbound>=rbound) return;
+	if(lbound>=rbound) return; //trivialer Fall
 
-	if( median && lbound < rbound){
+	if( median && lbound < rbound){ //berechne den median
 		int center = (rbound-lbound)/2;
-		int &a = lbound;
+		int &a = lbound; //benutze referenzen um weniger zu denken
 		int &b = center;
 		int &c = rbound;
-		if(a>b)
+		if(a>b) //siehe median tabelle
 			if(b>c)
 				tausche(f,b,rbound);
 			else
@@ -33,14 +33,14 @@ void quicksort(int lbound, int rbound, uint* f, bool median){
 	uint pivot = f[rbound];
 
 	do{
-		while(f[l]<=pivot && l<rbound) l++;
-		while(f[r]>=pivot && r>lbound) r--;
-		if(l<r)	tausche(f,l,r);
+		while(f[l]<=pivot && l<rbound) l++; //bewege linken zeiger
+		while(f[r]>=pivot && r>lbound) r--; //bewege rechten zeiger
+		if(l<r)	tausche(f,l,r); //tausche
 	}while(l<r);
 
-	if(f[l]>pivot) tausche(f,l,rbound);
+	if(f[l]>pivot) tausche(f,l,rbound); //tausche pivot element an die richtige stelle
 
-	quicksort(lbound,l-1,f,median);
+	quicksort(lbound,l-1,f,median); //recurse!
 	quicksort(l+1,rbound,f,median);
 }
 
