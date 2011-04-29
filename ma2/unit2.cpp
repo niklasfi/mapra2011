@@ -6,9 +6,9 @@ typedef unsigned int uint;
 int main(){
 		uint* feld;
 		for(uint i = 1; i <6;  i++){
-			uint len = 1000;
+			uint len = 10000000;
 			start( i, len, feld);
-			selectionsort(len,feld);
+			bubblesort(len,feld);
 			ergebnis(feld);
 		}
 }
