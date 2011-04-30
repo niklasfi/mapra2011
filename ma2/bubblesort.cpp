@@ -1,16 +1,8 @@
 #include "bubblesort.h"
-
 typedef unsigned int uint;
 
-void bubblesort(uint length, uint *f){
-	bool swapped;
-	do{
-		swapped = false;
-		for( uint i = 1; i <= length -1; i++)
-			if( f[i-1] > f[i]){
-				tausche(f,i-1,i);
-				swapped = true;
-			}
-		
-	}while(swapped);
+void bubblesort(uint num, uint* f){
+	for (uint i=0; i<num; i++)
+		for (uint j=num-1; j>i; j--)
+			if (f[j]<f[j-1]) tausche(f, j, j-1);
 }
