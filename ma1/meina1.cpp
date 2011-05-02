@@ -2,8 +2,8 @@
 *  Name       : meina1.cpp                                 *
 *  Verwendung : Loesung der ersten Praktikumsaufgabe,      *
 *               Nullstellen eines quadratischen Polynoms   *
-*  Autor      :                                            *
-*  Datum      :                                            *
+*  Autor      : Niklas Fischer                             *
+*  Datum      : 2011-04-11                                 *
 *  Sprache    : C++                                        *
 ***********************************************************/
 
