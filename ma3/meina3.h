@@ -1,3 +1,7 @@
-typedef unsigned int uint;
+#include "unit3.h"
+#include <cmath>
+#include <iostream>
 
-#include <unit3.h>
+typedef unsigned int uint;
+typedef double Vektor[MaxTiefe+1];
+typedef double (*Funktion) (double x);
