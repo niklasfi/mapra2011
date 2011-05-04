@@ -1,3 +1,5 @@
+#pragma once
+
 extern const int AnzahlBeispiele;
 
 const int MaxTiefe = 30;
