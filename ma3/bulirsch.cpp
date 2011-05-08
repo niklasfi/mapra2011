@@ -5,18 +5,18 @@ bool Bul::grafik, Bul::ausgabe;
 Bul::Bul(Funktion f):f(f){}
 
 double Bul::integrate(double a, double b, double eps){
-	if(b==a) return 0;
+	if(b==a) return 0;		// trivialer Fall
 	
-	index = 0;
+	index = 0;			// Initialiserung von "index"
 	
 	this->eps = eps;
-	this->minus = b < a;
+	this->minus = b < a;		
 	
-	if(minus){
+	if(minus){			// Falls b < a
 		this->a = b;
 		this->h0 = a-b;
 	}
-	else{
+	else{				// falls b > a
 		this->a = a;
 		this->h0 = b-a;
 	}
@@ -34,13 +34,13 @@ double Bul::integrate(double a, double b, double eps){
 	return res;
 }
 
-int Bul::numparts(int i){ //spart speicher :)
+int Bul::numparts(int i){ 		// spart speicher :), definiert "N"
 	if(i==0) return 1;
-	if(i%2) return 1<<((i+1)/2); //odd
-	else return 3*(1<<(i/2-1)); //even
+	if(i%2) return 1<<((i+1)/2); 	// i odd
+	else return 3*(1<<(i/2-1)); 	// i even
 }
 
-double Bul::stepOnce(){
+double Bul::stepOnce(){			// berechnet T[index,0]
 	if(index==0)
 		return stepInit();
 	if(index % 2)
@@ -49,21 +49,21 @@ double Bul::stepOnce(){
 		return stepEven();
 }
 
-double Bul::stepInit(){
+double Bul::stepInit(){				// Initialisierung von f fuer die ersten Schritt = T[0,0]
 	double l = f(a);
-	double r = f(a+h0);
-	all = (l+r)/2;
-	even=0;
+	double r = f(a+h0);			// a+h0 = b
+	all = (l+r)/2;				// Initialiserung von "all", Speichern von 
+	even=0;					// Speichern von alle Berechnungen im Fall index=even
 	return all*h0;
 }
 
-double Bul::stepEven(){ //wird ausgeführt, wenn index % 2 == 0
-	int till = numparts(index);
-	double h = h0/till;
+double Bul::stepEven(){ 				// wird ausgeführt, wenn index % 2 == 0
+	int till = numparts(index);			// numparts: even, Anzahl von Teile
+	double h = h0/till;				// Schrittlaenge im "index"-ten Schritt erstellen
 
-	for(int j = 1; j < till; j+=(index>2?2:1)){
-		if( j % 3 == 0) continue;
-		double fx = f(a+h*j);
+	for(int j = 1; j < till; j+=(index>2?2:1)){	// Die in vorherigen "even" berechneten Punkte vermeiden
+		if( j % 3 == 0) continue;		// Die in "odd" berechneten Punkte vermeiden
+		double fx = f(a+h*j);			// Falls j % 3 != 0
 		even+= fx;
 	}
 	
@@ -72,11 +72,11 @@ double Bul::stepEven(){ //wird ausgeführt, wenn index % 2 == 0
 	return h * sigma;
 }
 
-double Bul::stepOdd(){ //wird ausgeführt, wenn index % 2 == 1
-	int till = numparts(index);
-	double h = h0/till;
+double Bul::stepOdd(){ 				// wird ausgeführt (wie beim Romberg Verfahren), wenn index % 2 == 1
+	int till = numparts(index);		
+	double h = h0/till;			
 	
-	odd = 0;
+	odd = 0;				// Speichern von alle Berechnungen im Fall index = odd
 	
 	for(int j = 1; j < till; j+= 2){
 		double fx = f(a+h*j);
@@ -86,7 +86,7 @@ double Bul::stepOdd(){ //wird ausgeführt, wenn index % 2 == 1
 	return h*(odd + all);
 }
 
-double Bul::extrapolate(){
+double Bul::extrapolate(){			//wie im Romberg Verfahren
 	index ++;
 
 	double tdiag[2];
