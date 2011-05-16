@@ -1,3 +1,5 @@
+#pragma once
+
 /*****************************************************************
 *  Name       : unit4.h                                          *
 *  Verwendung : Schnittstelle zu Praktikumsumgebung (MAPRA),     *
@@ -6,8 +8,9 @@
 *  Datum      : Nov '96 - Mai '00                                *
 *****************************************************************/
 
-class Matrix;
-class Vektor;
+#include "matrix.h"
+#include "vektor.h"
+#include "ui2.h"
 
 extern const int AnzahlBeispiele;
 
