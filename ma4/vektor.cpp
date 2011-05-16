@@ -58,9 +58,11 @@ Vektor::Vektor(const Vektor & x)
 // ----- Schreib- und Lesezugriff auf Vektorelemente -----
 
 double &Vektor::operator () (const int i) {
+	#ifdef NOBOUNDS
     if (i < 0 || i >= Laeng)
-	VekFehler("Ungueltiger Index!");
-
+		VekFehler("Ungueltiger Index!");
+	#endif
+	
     return Vek[i];
 }
 
@@ -68,8 +70,10 @@ double &Vektor::operator () (const int i) {
 // ----- Lesezugriff auf Elemente konstanter Vektoren -----
 
 double Vektor::operator () (const int i) const {
+	#ifdef NOBOUNDS
     if (i < 0 || i >= Laeng)
-	VekFehler("Ungueltiger Index!");
+		VekFehler("Ungueltiger Index!");
+	#endif
 
     return Vek[i];
 }
@@ -148,16 +152,16 @@ Vektor & Vektor::ReDim(const int l)
 {
 	if(Vek) delete[] Vek;
 	if (l <= 0)
-	VekFehler("Nur Vektoren mit positiver Laenge!");
+		VekFehler("Nur Vektoren mit positiver Laenge!");
 
     Laeng = l;
 
     Vek = new(nothrow) double[l];
     if (Vek == NULL)
-	VekFehler("Nicht genuegend Speicher!");
+		VekFehler("Nicht genuegend Speicher!");
 
-    for (int i = 0; i < l; i++)
-	(*this) (i) = 0;
+    for (int h = 0; h < l; h++)
+		(*this) (h) = 0;
 	
 	return *this;
 }
@@ -182,12 +186,15 @@ double Vektor::Norm2() const
 
 double Vektor::NormMax() const
 {
-    int max = 0;
+	int max;
+    return NormMax(max);
+}
+double  Vektor::NormMax (int& max) const{
+	max = 0;
     for (int i = 0; i < Laeng; i++)
     	if(fabs((*this)(i))>fabs((*this)(max))) max = i;
-    return fabs((*this)(max));
+    return abs(Vek[max]);
 }
-
 
 // ==================================
 //      arithmetische Operatoren

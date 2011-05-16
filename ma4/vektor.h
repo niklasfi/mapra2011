@@ -37,6 +37,7 @@ class Vektor
     int     Laenge  () const { return Laeng; }  // Laenge
     double  Norm2   () const;                   // Euklidische Norm des Vektors
     double  NormMax () const;                   // Maximum-Norm des Vektors
+    double  NormMax (int& maxIndex) const;                   // Maximum-Norm des Vektors
 
     static void VekFehler (const char str[]);   // Fehlermeldung ausgeben
 
