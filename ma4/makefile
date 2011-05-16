@@ -1,5 +1,6 @@
 CC    = g++
-CPPFLAGS = -g -Wall -std=c++0x
+CPPFLAGS = -g -Wall -std=c++0x -O3
+LDFLAGS = -L. -lz
 
 OBJECTS = vektor.o matrix.o
 
@@ -10,10 +11,10 @@ else
 endif
 
 .PHONY : all
-all: ui2.exe test4.exe
+all: test4.exe powerit.exe
 
 %.exe: %.o ${OBJECTS}
-	${CXX} ${LDFLAGS} -o $@ $< ${OBJECTS}
+	${CXX} ${LDFLAGS} -o $@ $< ${OBJECTS} gcc-${ARCH}bit/unit4.o
 
 %.o: %.cpp %.h
 	${CXX} ${CPPFLAGS} -c $<
