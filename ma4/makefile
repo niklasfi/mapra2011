@@ -1,5 +1,6 @@
 CC    = g++
-CPPFLAGS = -g -Wall -std=c++0x -O3
+CPPFLAGS = -g -Wall -std=c++0x -O3 -DNOBOUNDS
+#-DNOBOUNDS definiert nobounds
 LDFLAGS = -L. -lz
 
 OBJECTS = vektor.o matrix.o
