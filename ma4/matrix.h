@@ -28,6 +28,7 @@ class Matrix
     int     Spalten  () const { return Spalt; }  // Zeilen
     double  Norm2   () const;                   // Euklidische Norm des Matrixs
     double  NormMax () const;                   // Maximum-Norm des Matrixs
+    double  NormMax (int& max) const;                   // Maximum-Norm des Matrixs. Index i ist max index
 
     static void MatFehler (const char str[]);   // Fehlermeldung ausgeben
 

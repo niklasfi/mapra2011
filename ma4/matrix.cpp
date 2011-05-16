@@ -27,13 +27,17 @@ Matrix::Matrix  (const Matrix& m):Zeil(m.Zeil),Spalt(m.Spalt){
 }         // Kopierkonstruktor
 
 double& Matrix::operator () (const int i, const int j){
+	#ifdef NOBOUNDS
 	if(i<0 || i>Zeil) MatFehler("Index i out of bounds when accessing Matrix(i,j)");
 	if(j<0 || j>Spalt) MatFehler("Index j out of bounds when accessing Matrix(i,j)");
+	#endif
 	return Mat[i*Spalt+j];
 }
 double  Matrix::operator () (const int i, const int j) const{
+	#ifdef NOBOUNDS
 	if(i<0 || i>Zeil) MatFehler("Index i out of bounds when accessing Matrix(i,j)");
 	if(j<0 || j>Spalt) MatFehler("Index j out of bounds when accessing Matrix(i,j)");
+	#endif
 	return Mat[i*Spalt+j];
 }  // Zugriff auf falls Matrix const
 
@@ -99,12 +103,18 @@ double  Matrix::Norm2   () const{
 		res += Mat[i]*Mat[i];
 	return sqrt(res);
 }                   // Euklidische Norm des Matrixs
+
 double  Matrix::NormMax () const{
 	int max = 0;
-    for (int i = 0; i < Spalt*Zeil; i++)
+    return NormMax(max);
+}                  // Maximum-Norm des Matrixs
+
+double Matrix::NormMax(int& max) const{
+	max = 0;
+	for (int i = 0; i < Spalt*Zeil; i++)
     	if(fabs(Mat[i])>fabs(Mat[max])) max = i;
     return fabs(Mat[max]);
-}                  // Maximum-Norm des Matrixs
+}
 
 void Matrix::MatFehler (const char str[]){
     cerr << "\nMatrixfehler: " << str << '\n' << endl;
@@ -187,8 +197,11 @@ std::ostream& operator << (std::ostream& os, const Matrix& x){
 Vektor   operator *  (const Matrix& m, const Vektor& v){
 	//std::cout << m << v;
 
-	if(m.Spalt != v.Laeng) Matrix::MatFehler("Dimensionsfehler bei der Multiplikation von Matrix+Vektor");
-	
+	if(m.Spalt != v.Laeng){
+		std::cout << "Matrix: " << m.Zeil << "x" << m.Spalt << "\n"
+			<< "Vektor: " << v.Laeng;
+		Matrix::MatFehler("Dimensionsfehler bei der Multiplikation von Matrix+Vektor");
+	}
 	Vektor z(m.Zeil);
 	
 	for(int i = 0; i < m.Zeil; i++){
