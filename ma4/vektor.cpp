@@ -58,7 +58,7 @@ Vektor::Vektor(const Vektor & x)
 // ----- Schreib- und Lesezugriff auf Vektorelemente -----
 
 double &Vektor::operator () (const int i) {
-	#ifdef NOBOUNDS
+	#ifndef NOBOUNDS
     if (i < 0 || i >= Laeng)
 		VekFehler("Ungueltiger Index!");
 	#endif
@@ -70,7 +70,7 @@ double &Vektor::operator () (const int i) {
 // ----- Lesezugriff auf Elemente konstanter Vektoren -----
 
 double Vektor::operator () (const int i) const {
-	#ifdef NOBOUNDS
+	#ifndef NOBOUNDS
     if (i < 0 || i >= Laeng)
 		VekFehler("Ungueltiger Index!");
 	#endif

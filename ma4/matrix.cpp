@@ -27,14 +27,16 @@ Matrix::Matrix  (const Matrix& m):Zeil(m.Zeil),Spalt(m.Spalt){
 }         // Kopierkonstruktor
 
 double& Matrix::operator () (const int i, const int j){
-	#ifdef NOBOUNDS
+	#ifndef NOBOUNDS
+	std::cout << "hi\n";
 	if(i<0 || i>Zeil) MatFehler("Index i out of bounds when accessing Matrix(i,j)");
 	if(j<0 || j>Spalt) MatFehler("Index j out of bounds when accessing Matrix(i,j)");
 	#endif
 	return Mat[i*Spalt+j];
 }
 double  Matrix::operator () (const int i, const int j) const{
-	#ifdef NOBOUNDS
+	#ifndef NOBOUNDS
+	std::cout << "ho\n";
 	if(i<0 || i>Zeil) MatFehler("Index i out of bounds when accessing Matrix(i,j)");
 	if(j<0 || j>Spalt) MatFehler("Index j out of bounds when accessing Matrix(i,j)");
 	#endif
