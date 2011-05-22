@@ -6,6 +6,7 @@
 
 using namespace std;
 
+
 Matrix::Matrix  (const int h, const int w):Zeil(h),Spalt(w){
 	if (h <= 0 || w <= 0)
 	MatFehler("Nur Matrizen mit positiver Größe!");
@@ -16,7 +17,7 @@ Matrix::Matrix  (const int h, const int w):Zeil(h),Spalt(w){
 
     for (int i = 0; i < h*w; i++)
 		Mat[i] = 0;
-}
+}		// Konstruktor
 Matrix::Matrix  (const Matrix& m):Zeil(m.Zeil),Spalt(m.Spalt){
 	Mat = new(nothrow) double[Zeil*Spalt];
 	if (Mat == NULL)
@@ -33,7 +34,7 @@ double& Matrix::operator () (const int i, const int j){
 	if(j<0 || j>Spalt) MatFehler("Index j out of bounds when accessing Matrix(i,j)");
 	#endif
 	return Mat[i*Spalt+j];
-}
+}		// Schreib- und Lesezugriff
 double  Matrix::operator () (const int i, const int j) const{
 	#ifndef NOBOUNDS
 	std::cout << "ho\n";

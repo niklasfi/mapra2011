@@ -135,7 +135,7 @@ Vektor & Vektor::operator *=(const double c)
 
 Vektor & Vektor::operator /=(const double c)
 {	
-	if (c=0)
+	if (c==0)
 		VekFehler("Teilen durch NULL nicht zulaessig!");
 		
 	for(int i = 0; i<Laeng; i++)
@@ -273,8 +273,8 @@ Vektor operator *(const Vektor & x, const double c)
 
 Vektor operator /(const Vektor & x, const double c)
 {
-	if (c=0)
-	VekFehler("Teilen durch NULL nicht zulaessig!");
+	if (c==0)
+		Vektor::VekFehler("Teilen durch NULL nicht zulaessig!");
 		
 	Vektor z = x;
 	return z /= c;
