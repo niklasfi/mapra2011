@@ -134,7 +134,10 @@ Vektor & Vektor::operator *=(const double c)
 // ----- Zuweisungsoperator mit Divsion "/=" ----
 
 Vektor & Vektor::operator /=(const double c)
-{
+{	
+	if (c=0)
+		VekFehler("Teilen durch NULL nicht zulaessig!");
+		
 	for(int i = 0; i<Laeng; i++)
 		(*this)(i) /= c;
 	return *this;
@@ -190,9 +193,10 @@ double Vektor::NormMax() const
     return NormMax(max);
 }
 double  Vektor::NormMax (int& max) const{
-	max = 0;
+	max = 0;								// Initialisierung von max
     for (int i = 0; i < Laeng; i++)
-    	if(fabs((*this)(i))>fabs((*this)(max))) max = i;
+    	if(fabs((*this)(i))>fabs((*this)(max))) max = i;	// Vergleich der Absolute der einzelnen Eintraege
+    														// Speichern der Stelle des bisher betragsgroessten Eintrags
     return abs(Vek[max]);
 }
 
@@ -269,6 +273,9 @@ Vektor operator *(const Vektor & x, const double c)
 
 Vektor operator /(const Vektor & x, const double c)
 {
+	if (c=0)
+	VekFehler("Teilen durch NULL nicht zulaessig!");
+		
 	Vektor z = x;
 	return z /= c;
 }
