@@ -99,26 +99,11 @@ Matrix& Matrix::ReDim(const int h, const int w){
     	Mat[i] = 0;
     
     return *this;
-}                // neue Größe festlegen
-double  Matrix::Norm2   () const{
-	double res = 0;
-	for (int i = 0; i < Spalt*Zeil; i++)
-		res += Mat[i]*Mat[i];
-	return sqrt(res);
-}                   // Euklidische Norm des Matrixs
-
-double  Matrix::NormMax () const{
-	int max = 0;
-    return NormMax(max);
-}                  // Maximum-Norm des Matrixs
-
-double Matrix::NormMax(int& max) const{
-	max = 0;
-	for (int i = 0; i < Spalt*Zeil; i++)
-    	if(fabs(Mat[i])>fabs(Mat[max])) max = i;
-    return fabs(Mat[max]);
 }
 
+#include "maxnorm.cpp" //jee siang's matrix norm
+
+// neue Größe festlegen
 void Matrix::MatFehler (const char str[]){
     cerr << "\nMatrixfehler: " << str << '\n' << endl;
     exit(1);

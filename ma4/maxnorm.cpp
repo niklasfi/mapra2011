@@ -12,7 +12,7 @@ double Matrix::NormMax() const
 		zsum = 0;
 	
 		for (int j = 0; j < Spalt; j++)
-			zsum += fabs(Mat(i,j));			// Summieren der Zeileneintraeger einzeln zum Betrag
+			zsum += fabs((*this)(i,j));			// Summieren der Zeileneintraeger einzeln zum Betrag
 		
 		if (zsummax < zsum) zsummax = zsum;
 	}
