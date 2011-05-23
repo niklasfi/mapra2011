@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[]){
 	if(argc == 1){
-		std::cout << "usage: powerit.exe bspNummer [eps]\n";
+		std::cout << "usage: powerit.exe bspNummer\n";
 		exit(1);
 	}
 	
