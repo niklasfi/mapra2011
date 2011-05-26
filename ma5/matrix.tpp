@@ -1,5 +1,5 @@
-#include "matrix.h"
-#include "vektor.h"
+#include "tmatrix.h"
+#include "tvektor.h"
 #include <iomanip>
 #include <cmath>
 #include <cstdlib>
@@ -7,19 +7,23 @@
 using namespace std;
 
 
-Matrix::Matrix  (const int h, const int w):Zeil(h),Spalt(w){
+template < typename T >
+TMatrix<T>::TMatrix<T>  (const int h, const int w):Zeil(h),Spalt(w){
 	if (h <= 0 || w <= 0)
 	MatFehler("Nur Matrizen mit positiver Größe!");
 
-    Mat = new(nothrow) double[h*w];
+    Mat = new(nothrow) T[h*w];
     if (Mat == NULL)
 	MatFehler("Nicht genuegend Speicher!");
 
     for (int i = 0; i < h*w; i++)
 		Mat[i] = 0;
 }		// Konstruktor
-Matrix::Matrix  (const Matrix& m):Zeil(m.Zeil),Spalt(m.Spalt){
-	Mat = new(nothrow) double[Zeil*Spalt];
+
+
+template < typename T >
+TMatrix<T>::TMatrix<T>  (const TMatrix<T> & m):Zeil(m.Zeil),Spalt(m.Spalt){
+	Mat = new(nothrow) T[Zeil*Spalt];
 	if (Mat == NULL)
 	MatFehler("Nicht genuegend Speicher!");
 	
@@ -27,7 +31,9 @@ Matrix::Matrix  (const Matrix& m):Zeil(m.Zeil),Spalt(m.Spalt){
 		Mat[i] = m.Mat[i];
 }         // Kopierkonstruktor
 
-double& Matrix::operator () (const int i, const int j){
+
+template < typename T >
+T & TMatrix<T>::operator () (const int i, const int j){
 	#ifndef NOBOUNDS
 	std::cout << "hi\n";
 	if(i<0 || i>Zeil) MatFehler("Index i out of bounds when accessing Matrix(i,j)");
@@ -35,7 +41,10 @@ double& Matrix::operator () (const int i, const int j){
 	#endif
 	return Mat[i*Spalt+j];
 }		// Schreib- und Lesezugriff
-double  Matrix::operator () (const int i, const int j) const{
+
+
+template < typename T >
+T  TMatrix::operator () (const int i, const int j) const{
 	#ifndef NOBOUNDS
 	std::cout << "ho\n";
 	if(i<0 || i>Zeil) MatFehler("Index i out of bounds when accessing Matrix(i,j)");
@@ -44,7 +53,9 @@ double  Matrix::operator () (const int i, const int j) const{
 	return Mat[i*Spalt+j];
 }  // Zugriff auf falls Matrix const
 
-Matrix& Matrix::operator =  (const Matrix& x){
+
+template < typename T >
+TMatrix<T>& TMatrix<T>::operator =  (const TMatrix<T>& x){
     if (Zeil != x.Zeil || Spalt != x.Spalt)
 		MatFehler("Inkompatible Dimensionen fuer 'Matrix = Matrix'!");
 
@@ -53,7 +64,10 @@ Matrix& Matrix::operator =  (const Matrix& x){
 
     return *this;
 };  // Zuweisung
-Matrix& Matrix::operator += (const Matrix& x){
+
+
+template < typename T >
+TMatrix<T>& TMatrix<T>::operator += (const TMatrix<T>& x){
 	if (Zeil != x.Zeil || Spalt != x.Spalt)
 		MatFehler("Inkompatible Dimensionen fuer 'Matrix += Matrix'!");
 
@@ -62,7 +76,10 @@ Matrix& Matrix::operator += (const Matrix& x){
 
     return *this;
 }
-Matrix& Matrix::operator -= (const Matrix& x){
+
+
+template < typename T >
+TMatrix<T>& TMatrix<T>::operator -= (const TMatrix<T>& x){
 	if (Zeil != x.Zeil || Spalt != x.Spalt)
 		MatFehler("Inkompatible Dimensionen fuer 'Matrix -= Matrix'!");
 
@@ -71,20 +88,28 @@ Matrix& Matrix::operator -= (const Matrix& x){
 
     return *this;
 }
-Matrix& Matrix::operator *= (const double d){
+
+
+template < typename T >
+TMatrix<T>& TMatrix<T>::operator *= (const T d){
 	for(int i = 0; i < Zeil*Spalt; i++)
 		Mat[i] *= d;
 	
 	return *this;
 }
-Matrix& Matrix::operator /= (const double d){
+
+
+template < typename T >
+TMatrix<T>& TMatrix<T>::operator /= (const T d){
 	for(int i = 0; i < Zeil*Spalt; i++)
 		Mat[i] /= d;
 	
 	return *this;
 }
 
-Matrix& Matrix::ReDim(const int h, const int w){
+
+template < typename T >
+TMatrix<T>& TMatrix<T>::ReDim(const int h, const int w){
 	if(Mat) delete[] Mat;
 	
 	if (h <= 0 || w <= 0) MatFehler("Nur Matrizen mit positiver größe!");
@@ -92,40 +117,51 @@ Matrix& Matrix::ReDim(const int h, const int w){
 	Zeil = h;
 	Spalt = w;
 	
-    Mat = new(nothrow) double[h*w];
+    Mat = new(nothrow) T[h*w];
     if (Mat == NULL) MatFehler("Nicht genuegend Speicher!");
 
     for (int i = 0; i < h*w; i++) 
     	Mat[i] = 0;
     
     return *this;
-}
+}	// neue Größe festlegen
 
-#include "maxnorm.cpp" //jee siang's matrix norm
+//#include "maxnorm.cpp" //jee siang's matrix norm
 
-// neue Größe festlegen
-void Matrix::MatFehler (const char str[]){
+
+template < typename T >
+void TMatrix<T>::MatFehler (const char str[]){
     cerr << "\nMatrixfehler: " << str << '\n' << endl;
     exit(1);
 }   // Fehlermeldung ausgeben
 
-Matrix   operator +  (const Matrix& x, const Matrix& y){
-	Matrix z = x;
+
+template < typename T >
+TMatrix<T>   operator +  (const TMatrix<T>& x, const TMatrix<T>& y){
+	TMatrix z = x;		// unsicher
 	return z += y;
 } // Addition
-Matrix   operator -  (const Matrix& x, const Matrix& y){
-	Matrix z = x;
+
+
+template < typename T >
+TMatrix<T>   operator -  (const TMatrix<T>& x, const TMatrix<T>& y){
+	TMatrix z = x;		// unsicher
 	return z -= y;
 } // Subtraktion
-Matrix   operator -  (const Matrix& x){
-	Matrix z = x;
+
+
+template < typename T >
+TMatrix<T>   operator -  (const TMatrix<T>& x){
+	TMatrix z = x;		// unsicher
 	return z *= -1;
 }               // Vorzeichen
 
-Matrix operator *  (const Matrix& x, const Matrix& y){
-	if(x.Spalt != y.Zeil) Matrix::MatFehler("Dimensionsfehler bei der Multiplikation von Matrizen");
+
+template < typename T >
+TMatrix<T> operator *  (const TMatrix<T>& x, const TMatrix<T>& y){
+	if(x.Spalt != y.Zeil) TMatrix<T>::MatFehler("Dimensionsfehler bei der Multiplikation von Matrizen");
 	
-	Matrix m(x.Zeil,y.Spalt);
+	TMatrix m(x.Zeil,y.Spalt);	// unsicher
 	
 	for(int i = 0; i < x.Zeil; i++)
 		for( int j = 0; j < y.Spalt; j++){
@@ -136,29 +172,45 @@ Matrix operator *  (const Matrix& x, const Matrix& y){
 	
 	return m;
 } // Matrixprdukt
-Matrix   operator *  (const double d,  const Matrix& m){
-	Matrix z = m;
+
+
+template < typename T >
+TMatrix<T>   operator *  (const T d,  const TMatrix<T>& m){
+	TMatrix z = m;		// unsicher
 	return z *= d;
 } // Vielfache
-Matrix   operator *  (const Matrix& m, const double d){
+
+
+template < typename T >
+TMatrix<T>   operator *  (const TMatrix<T>& m, const T d){
 	return d*m;
 }
-Matrix   operator /  (const Matrix& m, const double d){
-	Matrix z = m;
+
+
+template < typename T >
+TMatrix<T>   operator /  (const TMatrix<T>& m, const T d){
+	TMatrix z = m;		// unsicher
 	return z /= d;
 }
 
-bool     operator == (const Matrix& a, const Matrix& b){
+
+template < typename T >
+bool     operator == (const TMatrix<T>& a, const TMatrix<T>& b){
 	if( a.Zeil != b.Zeil || a.Spalt != b.Spalt) return false;
 	for(int i = 0; i< a.Zeil*a.Spalt; i++)
 		if(a.Mat[i] != b.Mat[i]) return false;
 	return true;
 } // Vergleich
-bool     operator != (const Matrix& a, const Matrix& b){
+
+
+template < typename T >
+bool     operator != (const TMatrix<T>& a, const TMatrix<T>& b){
 	return !( a == b);
 }
 
-std::istream& operator >> (std::istream& is, Matrix& x){
+
+template < typename T >
+std::istream& operator >> (std::istream& is, TMatrix<T>& x){
 	cout << setiosflags(ios::right);
     for (int i = 0; i < x.Zeil; i++) {
     	cout << "\n";
@@ -170,7 +222,10 @@ std::istream& operator >> (std::istream& is, Matrix& x){
     }
     return is;
 }       // Eingabe
-std::ostream& operator << (std::ostream& os, const Matrix& x){
+
+
+template < typename T >
+std::ostream& operator << (std::ostream& os, const TMatrix<T>& x){
 	os << "\n";
 	for(int i = 0; i < x.Zeil; i++) {
 		os << "[";
@@ -182,15 +237,17 @@ std::ostream& operator << (std::ostream& os, const Matrix& x){
 	return os;
 }
 
-Vektor   operator *  (const Matrix& m, const Vektor& v){
+
+template < typename T >
+TVektor<T>   operator *  (const TMatrix<T>& m, const TVektor<T>& v){
 	//std::cout << m << v;
 
 	if(m.Spalt != v.Laeng){
 		std::cout << "Matrix: " << m.Zeil << "x" << m.Spalt << "\n"
 			<< "Vektor: " << v.Laeng;
-		Matrix::MatFehler("Dimensionsfehler bei der Multiplikation von Matrix+Vektor");
+		TMatrix<T>::MatFehler("Dimensionsfehler bei der Multiplikation von Matrix+Vektor");
 	}
-	Vektor z(m.Zeil);
+	TVektor z(m.Zeil);	// unsicher
 	
 	for(int i = 0; i < m.Zeil; i++){
 		for( int k = 0; k < m.Spalt; k++)
@@ -200,12 +257,14 @@ Vektor   operator *  (const Matrix& m, const Vektor& v){
 	return z;
 } // Multiplikation
 
-Vektor   operator *  (const Vektor& v, const Matrix& m){
+
+template < typename T >
+TVektor<T>   operator *  (const TVektor<T>& v, const TMatrix<T>& m){
 	//std::cout << v << m;
 
-	if(m.Zeil != v.Laeng) Matrix::MatFehler("Dimensionsfehler bei der Multiplikation von Vektor+Matrix");
+	if(m.Zeil != v.Laeng) TMatrix<T>::MatFehler("Dimensionsfehler bei der Multiplikation von Vektor+Matrix");
 	
-	Vektor z(m.Spalt);
+	TVektor z(m.Spalt);	// unsicher
 	
 	for(int j = 0; j < m.Spalt; j++)
 		for(int i = 0; i < m.Zeil; i++)

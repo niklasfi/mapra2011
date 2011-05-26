@@ -45,14 +45,14 @@ template < typename T > TVektor < T > operator * (const TVektor < T > &,
 template < typename T > class TMatrix
 {
 private:
-  T * mat;			// Zeiger auf Feld fuer Matrixelemente
-  int rows, cols;		// Matrixdimension
+  T * Mat;			// Zeiger auf Feld fuer Matrixelemente; 'mat' in 'Mat' geaendert
+  int Zeil, Spalt;		// Matrixdimension; 'rows' und 'cols' in 'Zeil' bzw. 'Spalt' geaendert
 
 public:
   TMatrix (int ro = 1, int co = 1);	// Konstruktor mit Laengenangabe
   ~TMatrix ()
   {
-    delete[]mat;
+    delete[]Mat;		// 'mat' in 'Mat' geaendert
   }				// Destruktor
   TMatrix (const TMatrix < T > &);	// Kopierkonstruktor
 
@@ -70,11 +70,11 @@ public:
   TMatrix < T > &Copy (const TMatrix < T > &);	// Matrix kopieren (neu fuer A5)
   int Zeilen () const
   {
-    return rows;
+    return Zeil;		// 'rows' in 'Zeil' geaendert
   }				// Zeilen
   int Spalten () const
   {
-    return cols;
+    return Spalt;		// 'cols' in 'Spalt' geaendert
   }				// Spalten
 
 
