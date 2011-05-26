@@ -212,7 +212,7 @@ TVektor<T> operator +(const TVektor<T> & x, const TVektor<T> & y)
     if (x.Laeng != y.Laeng)
 	TVektor<T>::VekFehler("Inkompatible Dimensionen fuer 'Vektor + Vektor'!");
 
-    TVektor z = x;
+    TVektor z = x;	// unsicher
     return z += y;
 }
 
@@ -224,7 +224,7 @@ TVektor<T> operator -(const TVektor<T> & x, const TVektor<T> & y)
 	if (x.Laeng != y.Laeng)
 		TVektor<T>::VekFehler("Inkompatible Dimensionen fuer 'Vektor - Vektor'!");
 
-    TVektor z = x;
+    TVektor z = x;	// unsicher
     return z -= y;}
 
 
@@ -232,7 +232,7 @@ TVektor<T> operator -(const TVektor<T> & x, const TVektor<T> & y)
 template < typename T >
 TVektor<T> operator -(const TVektor<T> & x)
 {
-	TVektor z = x;
+	TVektor z = x;	// unsicher
 	return z *= -1;
 }
 
@@ -276,7 +276,7 @@ TVektor<T> operator /(const TVektor<T> & x, const T c)
 	if (c==0)
 		TVektor<T>::VekFehler("Teilen durch NULL nicht zulaessig!");
 		
-	TVektor z = x;
+	TVektor z = x;	// unsicher
 	return z /= c;
 }
 
