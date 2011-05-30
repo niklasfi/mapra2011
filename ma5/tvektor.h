@@ -37,7 +37,6 @@ template < typename T > std::istream & operator >> (std::istream &, TVektor < T 
 template < typename T > std::ostream & operator << (std::ostream &, const TVektor < T > &);
 
 
-
 // Hier beginnt die eigentliche Deklaration des Klassentemplates
 
 template < typename T >		// T steht hier fuer den Parameter, z.B.

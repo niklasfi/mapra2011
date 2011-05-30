@@ -242,9 +242,9 @@ template < typename T >
 TVektor<T>   operator *  (const TMatrix<T>& m, const TVektor<T>& v){
 	//std::cout << m << v;
 
-	if(m.Spalt != v.Laeng){
+	if(m.Spalt != v.Laenge()){	// Laeng -> Laenge()
 		std::cout << "Matrix: " << m.Zeil << "x" << m.Spalt << "\n"
-			<< "Vektor: " << v.Laeng;
+			<< "Vektor: " << v.Laenge();	// Laeng -> Laenge()
 		TMatrix<T>::MatFehler("Dimensionsfehler bei der Multiplikation von Matrix+Vektor");
 	}
 	TVektor<T> z(m.Zeil);
@@ -262,8 +262,8 @@ template < typename T >
 TVektor<T>   operator *  (const TVektor<T>& v, const TMatrix<T>& m){
 	//std::cout << v << m;
 
-	if(m.Zeil != v.Laeng) TMatrix<T>::MatFehler("Dimensionsfehler bei der Multiplikation von Vektor+Matrix");
-	
+	if(m.Zeil != v.Laenge()) TMatrix<T>::MatFehler("Dimensionsfehler bei der Multiplikation von Vektor+Matrix");
+			// Laeng -> Laenge()
 	TVektor<T> z(m.Spalt);
 	
 	for(int j = 0; j < m.Spalt; j++)

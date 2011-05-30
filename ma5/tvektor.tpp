@@ -278,7 +278,7 @@ TVektor<T> operator /(const TVektor<T> & x, const T c)
 	if (c==0)
 		TVektor<T>::VekFehler("Teilen durch NULL nicht zulaessig!");
 		
-	TVektor<T> z = x;	// unsicher
+	TVektor<T> z = x;
 	return z /= c;
 }
 
