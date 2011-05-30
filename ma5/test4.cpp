@@ -10,6 +10,9 @@
 #include <cmath>
 #include <iostream>
 
+typedef TVektor<double> Vektor;
+typedef TMatrix<double> Matrix;
+
 using namespace std;
 
 const int BigLen=1000, SmallLen=10, Big1=500, Big2=4;
