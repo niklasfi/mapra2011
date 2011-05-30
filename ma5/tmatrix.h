@@ -97,7 +97,7 @@ public:
   friend TVektor < T > operator * <> (const TMatrix < T > &, const TVektor < T > &);	// Matrix-Vektor-
   friend TVektor < T > operator * <> (const TVektor < T > &, const TMatrix < T > &);	// Multiplikation
 
-  void MatFehler (const char str[]) const;	// Fehlermeldung ausgeben
+  static void MatFehler (const char str[]);	// Fehlermeldung ausgeben; static
 
 
 };

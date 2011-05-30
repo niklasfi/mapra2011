@@ -130,7 +130,7 @@ TMatrix<T>& TMatrix<T>::ReDim(const int h, const int w){
 
 
 template < typename T >
-void TMatrix<T>::MatFehler (const char str[]) const{
+void TMatrix<T>::MatFehler (const char str[]){
     cerr << "\nMatrixfehler: " << str << '\n' << endl;
     exit(1);
 }   // Fehlermeldung ausgeben

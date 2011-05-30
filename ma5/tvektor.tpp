@@ -348,7 +348,7 @@ istream & operator >>(istream & s, TVektor<T> & x)
 
 // ----- Ausgabe der Fehlermeldung "str" -----
 template < typename T >
-void TVektor<T>::VekFehler(const char str[]) const
+void TVektor<T>::VekFehler(const char str[])
 {
     cerr << "\nVektorfehler: " << str << '\n' << endl;
     exit(1);

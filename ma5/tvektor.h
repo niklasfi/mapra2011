@@ -92,7 +92,7 @@ public:
   friend std::istream & operator >> <> (std::istream &, TVektor < T > &);	// Eingabe
   friend std::ostream & operator << <> (std::ostream &, const TVektor < T > &);	// Ausgabe
 
-  void VekFehler (const char str[]) const;	// Fehlermeldung ausgeben
+  static void VekFehler (const char str[]);	// Fehlermeldung ausgeben; static
 
 };
 
