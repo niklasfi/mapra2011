@@ -71,6 +71,7 @@ public:
   }				// Laenge
   long double Norm2 () const;	// Euklidische Norm des Vektors
   T NormMax () const;		// Maximum-Norm des Vektors
+  T NormMax (int &) const;	// Hilfsprogram
 
 
   // Addition, Subtraktion, Aendern des Vorzeichens
