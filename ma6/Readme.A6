@@ -1,0 +1,75 @@
+MaPra SS 2011
+
+Zur Aufgabe 6:   B i l d b e a r b e i t u n g
+               =================================
+
+AUFGABEN:
+---------
+
+Die folgenden Aufgaben sollen von Ihnen bearbeitet werden, um die Funktions-
+fähigkeit Ihrer Klasse GreyScale zu testen. Speichern Sie die Ergebnisse
+jeweils in den Dateien 'result1.pgm', 'result2.pgm', ... ab!
+
+
+Die ersten beiden Aufgaben dienen lediglich zum Test des Einlese-Operators '>>'.
+'mapra.pgm' enthält keinerlei Kommentarzeilen, 'Puppenbrunnen.pgm' dagegen
+schon.
+   1.  'mapra.pgm' laden und in 'result1.pgm' abspeichern
+   2.  'Puppenbrunnen.pgm' laden und in 'result2.pgm' abspeichern
+
+Die Datei 'dom.pgm' enthält ein leicht verrauschtes Bild des Domes. Durch
+Medianfilter bzw. Verwischen (Blur) kann dieses Rauschen vermindert werden,
+allerdings auf Kosten der Details bei Medianfilterung bzw. der Schärfe bei
+Blur. Mit beiden Methoden werden so stark unterschiedliche Ergebnisse erzielt.
+   3.  'dom.pgm' laden, 5x Median anwenden
+   4.  'dom.pgm' laden, 2x Blur anwenden
+
+Folgende Aufgaben verdeutlichen die Wirkungsweise der verschiedenen Kanten-
+erkennungsfilter. Offensichtlich erzeugt der Sobelfilter dickere Kanten als
+der Laplacefilter.
+   5.  'shuttle.pgm' laden, Kirsch, Contrast anwenden
+   6.  'shuttle.pgm' laden, Laplace anwenden
+   7.  'shuttle.pgm' laden, Sobel anwenden
+
+Die Bildverarbeitung findet u.a. Anwendung bei der vollautomatisierten
+Qualitätskontrolle oder bei Robotern, die mit Hilfe einer Kamera ein
+bestimmtes Objekt lokalisieren sollen, um es z.B. zu greifen: Für die
+Mustererkennung ist es ratsam, ein Bild so zu vereinfachen, daß nur noch
+wichtige Elemente wie die Konturen erhalten bleiben.
+   8.  'bauteil.pgm' laden, Contrast, Binarize anwenden
+   9.  'bauteil.pgm' laden, Sobel, Invert anwenden
+
+Die Schärfe eines Bildes kann verbessert werden, indem die Kanten zusätzlich
+verstärkt werden.
+   10. 'roentgen.pgm' laden, 3x Sobel+ (beachte das '+'!), 1x Contrast anwenden
+   11. 'result4.pgm' laden (der unscharfe Dom, das Ergebnis von Aufgabe 4),
+       5x Laplace+ anwenden
+
+
+Neben diesen Aufgaben, die als Anregung dienen sollen, sollten Sie ruhig selbst
+einmal mit den verschiedenen Bildern und Operationen herumexperimentieren!
+Viel Spaß dabei!!!
+
+
+UEBERPRUEFUNG DER ERGEBNISSE:
+-----------------------------
+
+Benutzen Sie das Programm 'bildtest', um Ihre Ergebnisse, die Sie als
+PGM-Dateien gespeichert haben, auf Korrektheit hin prüfen zu lassen.
+Um z.B. die Ergebnisse der Aufgabe 7 in 'result7.pgm' zu überprüfen, rufen
+Sie 'bildtest -a7 result7.pgm' auf: '-a7' bedeutet, daß Aufgabe 7 gerechnet
+werden soll, die Ergebnisse der Musterlösung werden anschließend mit der
+Datei 'result7.pgm' (also Ihrem Ergebnis) verglichen.
+
+'bildtest' ohne Parameter startet das Programm im interaktiven Modus, so daß
+Sie sich auch schon vor der kompletten Implementierung Ihrer Klasse GreyScale
+einmal einen Eindruck davon machen können, wie Ihr Programm später laufen
+sollte...
+
+Durch Aufruf von 'bildtest -h' erhalten Sie einen Hilfetext mit weiteren
+Informationen.
+
+
+
+Und nun
+	VIEL ERFOLG !!!
