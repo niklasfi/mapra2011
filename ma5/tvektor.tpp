@@ -26,7 +26,7 @@ TVektor<T>::TVektor(const int l)
 
     Laeng = l;
 
-    Vek = new(nothrow) double[l];
+    Vek = new(nothrow) T[l];
     if (Vek == NULL)
 	VekFehler("Nicht genuegend Speicher!");
 
@@ -41,7 +41,7 @@ TVektor<T>::TVektor(const TVektor & x)
 {
     Laeng = x.Laeng;
 
-    Vek = new(nothrow) double[Laeng];
+    Vek = new(nothrow)  T[Laeng];
     if (Vek == NULL)
 	VekFehler("Nicht genuegend Speicher!");
 
