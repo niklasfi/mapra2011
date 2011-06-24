@@ -1,0 +1,375 @@
+#include "greyscale.h"
+
+#include <ctype.h> //liefert ascii isspace
+#include <assert.h>
+#include <math.h>
+#include <vector>
+#include <algorithm>
+
+GreyScale::GreyScale(int width, int height, Encoding enc):
+	data(width*height),width(width),height(height),targetEncoding(enc){}
+
+GreyScale::GreyScale(const GreyScale& o):
+	data(o.data),width(o.width),height(o.height),targetEncoding(o.targetEncoding){}
+
+GreyScale& GreyScale::operator=(const GreyScale& o){
+	Resize(o.width, o.height);
+	
+	data = o.data;
+	
+	return *this;
+}
+
+float& GreyScale::operator()(int x, int y){
+	return at(x,y);
+}
+
+float GreyScale::operator()(int x, int y) const{
+	return at(x,y);
+}
+
+float& GreyScale::at(int x,int y){
+	if(x>=width) x = width-1;
+	if(x < 0    ) x = 0;
+	
+	if(y>=height) y = height-1;
+	if(y < 0    ) y = 0;
+	
+	return data[y*width + x];
+}
+
+float GreyScale::at(int x,int y) const{
+	if(x>=width) x = width-1;
+	if(x< 0    ) x = 0;
+	
+	if(y>=height) y = height-1;
+	if(y < 0    ) y = 0;
+	
+	return data[y*width + x];
+}
+
+GreyScale& GreyScale::operator+=(const GreyScale& g){
+	assert(g.height == height);
+	assert(g.width == width);
+	
+	for(int i = 0; i < height * width; i++)
+		data[i] += g.data[i];
+
+	return *this;
+}
+
+GreyScale& GreyScale::operator-=(const GreyScale& g){
+	assert(g.height == height);
+	assert(g.width == width);
+	
+	for(int i = 0; i < height * width; i++)
+		data[i] -= g.data[i];
+	
+	return *this;
+}
+
+GreyScale GreyScale::operator+(const GreyScale& g) const{
+	GreyScale a(*this);
+	return a += g;
+}
+
+GreyScale GreyScale::operator-(const GreyScale& g) const{
+	GreyScale a(*this);
+	return a -= g;
+}
+
+GreyScale GreyScale::Binarize(float c) const{
+	GreyScale g(*this);
+	for(int i = 0; i < width*height; i++)
+		g.data[i] = (data[i]>c ? 1 : 0);
+	return g;
+}
+
+GreyScale GreyScale::Blur() const{
+	float mask[]{
+		  0  ,1./5.,  0,
+		1./5.,1./5.,1./5.,
+		  0  ,1./5.,  0
+	};
+	return Convolve(mask);
+}
+
+GreyScale GreyScale::Clamp() const{
+	GreyScale g(*this);
+	for(int i = 0; i < width*height; i++){
+		if     (g.data[i] > 1) g.data[i] = 1;
+		else if(g.data[i] < 0) g.data[i] = 0;
+	}
+	return g;
+}
+
+GreyScale GreyScale::Contrast() const{
+
+	float min = 1.0/0.0, max = -1.0/0.0;
+	
+	for(int i = 0; i < width*height; i++){
+		if(data[i]<min) min = data[i];
+		if(data[i]>max) max = data[i];
+	}
+	
+	if(min==max || min==1.0/0.0) return GreyScale(*this);
+	return LinTrans(1.0/(max-min),-min/(max-min));
+}
+
+float matrixAt(const float mask[], int size, int xPos ,int yPos){
+	int x = xPos+size/2, y = yPos + size/2;
+	return mask[y*size+x];
+}
+
+float GreyScale::convolveAt(int x, int y, const float mask[], int size) const{
+	float sum = 0;
+	for(int i = -size/2; i <= size/2; i++)
+		for(int j = -size/2; j <= size/2; j++)
+			sum += at(x+i,y+j)*matrixAt(mask,size,i,j);
+	return sum;
+}
+
+GreyScale GreyScale::Convolve(const float mask[], int size) const{
+	GreyScale g(width, height, targetEncoding);
+	
+	for(int j = 0; j < width; j ++)
+		for(int i = 0; i < height; i++)
+			g(j,i)=convolveAt(j,i,mask,size);
+
+	return g;
+}
+
+GreyScale GreyScale::Kirsch() const{
+	float mask[]{
+		 1, 3, 3,
+		-1, 0, 1,
+		-3,-3,-1
+	};
+	return Convolve(mask);
+}
+
+GreyScale GreyScale::Laplace() const{
+	float mask[]{0,-1,0,-1,4,-1,0,-1,0};
+	return Convolve(mask);
+}
+
+GreyScale GreyScale::LinTrans(float a, float b) const{
+	GreyScale g(*this);
+	for(int i = 0; i < width*height; i++)
+		g.data[i] = a*g.data[i]+b;
+	return g;
+}
+
+GreyScale GreyScale::Median() const{ 
+	std::vector<float> myvals(9);
+	GreyScale g(width, height, targetEncoding);
+	
+	for(int j = 0; j < width; j++)
+		for(int i = 0; i < height; i++){
+			for(int x = -1; x <= 1; x++)
+				for(int y = -1; y <= 1; y++)
+					myvals[(y+1)*3+(x+1)] = at(j+x,i+y);
+			std::sort<std::vector<float>::iterator>(myvals.begin(),myvals.end());
+			g(j,i)=myvals[5];
+		}
+			
+	return g;
+}
+
+GreyScale	GreyScale::Sobel() const{
+	float dx[]{
+		-1, 0, 1,
+		-2, 0, 2,
+		-1, 0, 1
+	};
+	
+	float dy[]{
+		  1, 2, 1,
+		  0, 0, 0,
+		 -1,-2,-1
+	};
+	
+	GreyScale medx(Convolve(dx));
+	GreyScale medy(Convolve(dy));
+	GreyScale g(width, height, targetEncoding);
+	
+	for(int j = 0; j < width; j++)
+		for(int i = 0; i < height; i++)
+			g(j,i) = sqrt(medx(j,i)*medx(j,i)+medy(j,i)*medy(j,i));
+	
+	return g;
+}
+
+int GreyScale::GetWidth() const{
+	return width;
+}
+
+int GreyScale::GetHeight() const{
+	return height;
+}
+
+GreyScale& GreyScale::Resize(int w, int h){
+	if(height != h || width != w){
+		width = w; height = h;
+		data.resize(width*height);
+	}
+	
+	return *this;
+}
+
+unsigned int GreyScale::GetEncoding() const{
+	return targetEncoding;
+}
+GreyScale& GreyScale::SetEncoding(Encoding enc){
+	targetEncoding = enc;
+	return *this;
+}
+
+bool skipcomment(std::istream& s){	
+	if(s.peek() != '#') return false;
+	while(s.get() != '\n');
+	skipcomment(s); //kommentar direkt hinter einem Kommentar
+	return true;
+}
+
+bool skipspace(std::istream& s){
+	while(isspace(s.peek()))
+		s.get();
+	return true;
+}
+
+bool skip(std::istream& s){
+	do{
+		skipspace(s);
+	}while(skipcomment(s));
+	return true;
+}
+
+std::istream& GreyScale::parseRaw(std::istream& s){
+	s >> width;
+	if(s.rdstate()) assert(false);
+	s >> height;
+	if(s.rdstate()) assert(false);
+	
+	{
+		short maxval;
+		s >> maxval;
+		if(maxval > 255) assert(false); //bpm Variante mit shorts
+		if(s.rdstate()) assert(false);
+	}
+	
+	for(int y = 0; y < height; y++)
+		for(int x = 0; x < width; x++){
+			skip(s);
+			(*this)(x,y) = s.get();
+		}
+	
+	return s;
+}
+
+std::istream& GreyScale::parseAscii(std::istream& s){
+	unsigned int w, h;
+	skip(s);
+	s >> w;
+	if(s.rdstate()) assert(false);
+	skip(s);
+	s >> h;
+	if(s.rdstate()) assert(false);
+	
+	skip(s);
+	short maxval;
+	s >> maxval;
+	if(maxval > 255) assert(false); //bpm Variante mit shorts
+	if(s.rdstate()) assert(false);
+	
+	Resize(w,h);
+	
+	for(int y = 0; y < height; y++)
+		for(int x = 0; x < width; x++){
+			skip(s);
+			unsigned int value;
+			s >> value;
+			at(x,y) = (1.0*value)/maxval;
+			if(s.rdstate()) assert(false);
+		}
+	
+	targetEncoding = Ascii;
+	return s;
+}
+
+std::istream& GreyScale::parseHuffmanA(std::istream&){
+	//TODO
+	assert(false);
+}
+
+std::istream& GreyScale::parseHuffmanB(std::istream&){
+	//TODO
+	assert(false);
+}
+
+std::ostream& GreyScale::serializeRaw(std::ostream&) const{
+	//TODO
+	assert(false);
+}
+
+std::ostream& GreyScale::serializeAscii(std::ostream& o) const{
+	std::vector<short> Pixel(width*height);
+	short max = 0;
+
+  for (int j=0; j<width; j++ )      // Fuer alle Bildpunkte ...
+    for (int i=0; i<height; i++ ){
+      short gr=float(at(i,j)*255+0.5);               // [0,1] auf [0,255] skalieren
+      if (gr>255) gr=255; else if (gr<0) gr=0; // clampen
+        Pixel[i+j*width]=short(gr); 
+			if (short(gr) > max) max = short(gr);
+    }
+	
+	o << "P2\n" 
+		<< width << " "<< height << "\n"
+		<< max << "\n";
+	
+	for( int j = 0; j < width; j++){
+		for( int i = 0; i <height; i++)
+			o << (short)Pixel[i + j*width] << " ";
+		o << "\n";
+	}
+	
+	return o;
+}
+
+std::ostream& GreyScale::serializeHuffman(std::ostream&, bool compress) const{
+	//TODO
+	assert(false);
+}
+
+std::ostream& operator<<(std::ostream& s, const GreyScale& x){
+	switch (x.GetEncoding()){
+		case GreyScale::Raw: x.serializeRaw(s); break;
+		case GreyScale::Ascii: x.serializeAscii(s); break;
+		case GreyScale::HuffmanA: x.serializeHuffman(s,false); break;
+		case GreyScale::HuffmanB: x.serializeHuffman(s,true); break;
+		default: assert(false);
+	}
+	return s;
+}
+
+std::istream& operator>>(std::istream& s, GreyScale& x){
+	char magic = s.get();
+	if(magic == 'P'){
+		magic = s.get();
+		if( magic == '2')
+			return x.parseAscii(s);
+		else if( magic == '5')
+			return x.parseRaw(s);
+		else assert(false);
+	}
+	else if(magic == 'M' && s.get() == 'H'){
+		magic = s.get();
+		if( magic == 'a')
+			return x.parseHuffmanA(s);
+		else if( magic == 'b')
+			return x.parseHuffmanB(s);
+		else assert(false);
+	}
+	return s;
+}

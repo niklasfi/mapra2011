@@ -1,0 +1,1 @@
+float& operator()(unsigned int, unsigned int); -> was ist width, was ist height

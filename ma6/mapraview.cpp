@@ -32,8 +32,8 @@ void Display ( const GreyScale &Pic, int Id, const char Text[] )
 
   byte  Pixel[Pic.GetWidth()*Pic.GetHeight()*ZoomFac*ZoomFac];
 
-  for ( unsigned int j=0; j<Pic.GetHeight(); j++ )      // Fuer alle Bildpunkte ...
-    for ( unsigned int i=0; i<Pic.GetWidth(); i++ )
+  for (int j=0; j<Pic.GetHeight(); j++ )      // Fuer alle Bildpunkte ...
+    for (int i=0; i<Pic.GetWidth(); i++ )
     {
       float gr=Pic(i,j)*255+0.5;               // [0,1] auf [0,255] skalieren
       if (gr>255) gr=255; else if (gr<0) gr=0; // clampen
