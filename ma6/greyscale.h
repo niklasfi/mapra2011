@@ -40,14 +40,14 @@ class GreyScale{
 	int GetHeight() const;
 	GreyScale& Resize(int, int);
 	
-	unsigned int GetEncoding() const;
-	GreyScale& SetEncoding(Encoding);
+	unsigned int GetFormat() const;
+	GreyScale& SetFormat(Encoding);
 	
 	private:
 	
 	std::vector<float> data;
-	int width;
-	int height;
+	short width;
+	short height;
 	
 	Encoding targetEncoding;
 	

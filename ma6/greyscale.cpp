@@ -5,6 +5,8 @@
 #include <math.h>
 #include <vector>
 #include <algorithm>
+#include <queue>
+#include "hufftree.h"
 
 GreyScale::GreyScale(int width, int height, Encoding enc):
 	data(width*height),width(width),height(height),targetEncoding(enc){}
@@ -29,11 +31,11 @@ float GreyScale::operator()(int x, int y) const{
 }
 
 float& GreyScale::at(int x,int y){
-	if(x>=width) x = width-1;
-	if(x < 0    ) x = 0;
+	if(x>=width) assert(false);//x = width-1;
+	if(x < 0    )assert(false);// x = 0;
 	
-	if(y>=height) y = height-1;
-	if(y < 0    ) y = 0;
+	if(y>=height) assert(false);//y = height-1;
+	if(y < 0    ) assert(false);//y = 0;
 	
 	return data[y*width + x];
 }
@@ -217,10 +219,10 @@ GreyScale& GreyScale::Resize(int w, int h){
 	return *this;
 }
 
-unsigned int GreyScale::GetEncoding() const{
+unsigned int GreyScale::GetFormat() const{
 	return targetEncoding;
 }
-GreyScale& GreyScale::SetEncoding(Encoding enc){
+GreyScale& GreyScale::SetFormat(Encoding enc){
 	targetEncoding = enc;
 	return *this;
 }
@@ -307,43 +309,108 @@ std::istream& GreyScale::parseHuffmanB(std::istream&){
 	assert(false);
 }
 
-std::ostream& GreyScale::serializeRaw(std::ostream&) const{
-	//TODO
-	assert(false);
-}
-
-std::ostream& GreyScale::serializeAscii(std::ostream& o) const{
-	std::vector<short> Pixel(width*height);
+std::ostream& GreyScale::serializeRaw(std::ostream& o) const{
+	std::vector<unsigned char> Pixel(width*height);
 	short max = 0;
 
   for (int j=0; j<width; j++ )      // Fuer alle Bildpunkte ...
     for (int i=0; i<height; i++ ){
-      short gr=float(at(i,j)*255+0.5);               // [0,1] auf [0,255] skalieren
-      if (gr>255) gr=255; else if (gr<0) gr=0; // clampen
-        Pixel[i+j*width]=short(gr); 
-			if (short(gr) > max) max = short(gr);
+      unsigned char gr=at(j,i)*255+0.5;               // [0,1] auf [0,255] skalieren
+			
+			Pixel[j+i*width]=gr; 
+			
+			if (gr > max) max = gr;
+    }
+	
+	o << "P5\n" 
+		<< width << " "<< height << "\n"
+		<< max << "\n";
+	
+	for( int i = 0; i < height; i++){
+		for( int j = 0; j < width; j++)
+			o.put(Pixel[j + i*width]);
+	}
+		
+	return o;
+}
+
+std::ostream& GreyScale::serializeAscii(std::ostream& o) const{
+	std::vector<unsigned char> Pixel(width*height);
+	short max = 0;
+
+  for (int j=0; j<width; j++ )      // Fuer alle Bildpunkte ...
+    for (int i=0; i<height; i++ ){
+      unsigned char gr=at(j,i)*255+0.5;               // [0,1] auf [0,255] skalieren
+			
+			Pixel[j+i*width]=gr; 
+			
+			if (gr > max) max = gr;
     }
 	
 	o << "P2\n" 
 		<< width << " "<< height << "\n"
 		<< max << "\n";
 	
-	for( int j = 0; j < width; j++){
-		for( int i = 0; i <height; i++)
-			o << (short)Pixel[i + j*width] << " ";
+	for( int i = 0; i < height; i++){
+		for( int j = 0; j < width; j++)
+			o << (int)Pixel[j + i*width] << " ";
 		o << "\n";
+	}
+		
+	return o;
+}
+
+struct huffTree_compare : public std::binary_function<huffTree*, huffTree*, bool>{
+	bool operator()(huffTree* a, huffTree* b) const{
+		return *a < *b;
+	}
+};
+
+std::ostream& GreyScale::serializeHuffman(std::ostream& o, bool compress) const{
+	
+	std::vector<unsigned short> histogram(256,0);
+	for(unsigned int i = 0; i < data.size(); i++){
+		unsigned char gr = data[i]*255+.5;
+		
+		histogram[gr]++;
+	}
+	
+	std::priority_queue<huffTree*, std::vector<huffTree*>, huffTree_compare> q;
+	
+	
+	for(unsigned int i = 0; i < histogram.size(); i++)
+		if(histogram[i]>0)
+			q.push(new huffTree((unsigned char)i,histogram[i]));
+	
+	huffTree* tree;
+	while(true){
+		tree = q.top(); q.pop();
+		if(q.empty()) break;
+		huffTree* second = q.top(); q.pop();
+		q.push(new huffTree(*tree,*second));
+	}
+	
+	std::vector<std::vector<unsigned char>> outmap = tree->histogram();
+		
+	o << "MHa";
+	
+	o.write((char*)&width,2);
+	o.write((char*)&height,2);
+	
+	for(unsigned int i = 0; i < histogram.size(); i++)
+		o.write((char*) &histogram[i],2);
+	
+	for(int i = 0; i < width * height; i++){
+		std::vector<unsigned char>& val = outmap[data[i]];
+		for(unsigned int j = 0; j < val.size(); j++)
+			o.write((char*) &val[j],1);
 	}
 	
 	return o;
 }
 
-std::ostream& GreyScale::serializeHuffman(std::ostream&, bool compress) const{
-	//TODO
-	assert(false);
-}
-
 std::ostream& operator<<(std::ostream& s, const GreyScale& x){
-	switch (x.GetEncoding()){
+	switch (x.GetFormat()){
 		case GreyScale::Raw: x.serializeRaw(s); break;
 		case GreyScale::Ascii: x.serializeAscii(s); break;
 		case GreyScale::HuffmanA: x.serializeHuffman(s,false); break;

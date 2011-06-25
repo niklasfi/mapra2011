@@ -7,7 +7,7 @@ else
 	ARCH=32
 endif
 
-#LIB_OBJECTS = gcc-${ARCH}bit/IGL.o gcc-${ARCH}bit/unit6.o
+LIB_OBJECTS = gcc-${ARCH}bit/IGL.o gcc-${ARCH}bit/unit6.o
 OWN_OBJECTS = greyscale.o
 OBJECTS = ${LIB_OBJECTS} ${OWN_OBJECTS}
 

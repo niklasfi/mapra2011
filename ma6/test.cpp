@@ -2,10 +2,10 @@
 #include <fstream>
 #include <iostream>
 
-//#include <unistd.h> //gives us sleep
+#include <unistd.h> //gives us sleep
 
 #include "greyscale.h"
-//#include "unit6.h"
+#include "unit6.h"
 
 using namespace std;
 
@@ -20,7 +20,7 @@ bool Show=true;  // Bild anzeigen oder nicht
 // in den Datentyp "byte" (inclusive Clamping) umgewandelt. Je nach dem Wert
 // von "ZoomFac" werden aus einem "float"-Pixel ein oder mehrere "byte"-Pixel.
 
-/*void Display ( const GreyScale &Pic, int Id, const char Text[] )
+void Display ( const GreyScale &Pic, int Id, const char Text[] )
 {
   if (!Show) return;                           // Bild nicht anzeigen
 
@@ -40,13 +40,13 @@ bool Show=true;  // Bild anzeigen oder nicht
     }
 
   ShowImage(Pic.GetWidth()*ZoomFac,Pic.GetHeight()*ZoomFac,Pixel,Id,Text);
-}*/
+}
 
 
 int main(){
 	GreyScale pic;
   fstream   file;
-  char      name[] = "Bilder/barcode.pgm";
+  char      name[] = "Bilder/shuttle.pgm";
 	
 	file.open(name,ios::in);
 	if (file.rdstate())
@@ -55,9 +55,12 @@ int main(){
 	{
 		file >> pic;
 		
-		std::stringstream ss;
+		fstream out("result.pgm", fstream::out | fstream::binary | fstream::trunc);
+
+		pic.SetFormat(GreyScale::HuffmanA);
 		
-		ss << pic;
+		out << pic;
+		out.close();
 		
 	}
 	file.close();
