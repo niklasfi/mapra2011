@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <queue>
 #include "hufftree.h"
+#include <istream>
 
 GreyScale::GreyScale(int width, int height, Encoding enc):
 	data(width*height),width(width),height(height),targetEncoding(enc){}
@@ -292,7 +293,12 @@ std::istream& GreyScale::parseAscii(std::istream& s){
 			unsigned int value;
 			s >> value;
 			at(x,y) = (1.0*value)/maxval;
-			if(s.rdstate()) assert(false);
+			unsigned int state = s.rdstate();
+			bool eof = s.eof();
+			bool fail = s.fail();
+			bool bad = s.bad();
+			
+			if(state) assert(false);
 		}
 	
 	targetEncoding = Ascii;
@@ -362,7 +368,7 @@ std::ostream& GreyScale::serializeAscii(std::ostream& o) const{
 
 struct huffTree_compare : public std::binary_function<huffTree*, huffTree*, bool>{
 	bool operator()(huffTree* a, huffTree* b) const{
-		return *a < *b;
+		return *b < *a;
 	}
 };
 
@@ -390,15 +396,19 @@ std::ostream& GreyScale::serializeHuffman(std::ostream& o, bool compress) const{
 		q.push(new huffTree(*tree,*second));
 	}
 	
-	std::vector<std::vector<unsigned char>> outmap = tree->histogram();
+	std::vector<std::vector<unsigned char>> outmap = tree->code_table();
 		
 	o << "MHa";
 	
-	o.write((char*)&width,2);
-	o.write((char*)&height,2);
+	o.write((char*)&width+1 ,1); o.write((char*)&width, 1);
+	o.write((char*)&height+1,1); o.write((char*)&height,1);
+	
+	o.flush();
 	
 	for(unsigned int i = 0; i < histogram.size(); i++)
 		o.write((char*) &histogram[i],2);
+	
+	o.flush();
 	
 	for(int i = 0; i < width * height; i++){
 		std::vector<unsigned char>& val = outmap[data[i]];

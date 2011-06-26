@@ -46,7 +46,7 @@ void Display ( const GreyScale &Pic, int Id, const char Text[] )
 int main(){
 	GreyScale pic;
   fstream   file;
-  char      name[] = "Bilder/shuttle.pgm";
+  char      name[] = "Bilder/smalltest.pgm";
 	
 	file.open(name,ios::in);
 	if (file.rdstate())

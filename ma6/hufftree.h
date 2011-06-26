@@ -43,13 +43,13 @@ class huffTree{
 		else return (pixelcount < t.pixelcount);
 	}
 	
-	std::vector<std::vector<unsigned char>> histogram(){
-		std::vector<std::vector<unsigned char>> hist(255);
-		histogram(0,31,hist);
+	std::vector<std::vector<unsigned char>> code_table(){
+		std::vector<std::vector<unsigned char>> hist(256);
+		code_table(0,31,hist);
 		return hist;
 	}
 	
-	void histogram(unsigned int till_here,unsigned char next_bit, std::vector<std::vector<unsigned char>>& hist){
+	void code_table(unsigned int till_here,unsigned char next_bit, std::vector<std::vector<unsigned char>>& hist){
 		if(!children){
 			std::vector<unsigned char>& target = hist[color];
 			target.push_back  (till_here & 0xff000000);
@@ -63,8 +63,8 @@ class huffTree{
 			return;
 		}
 
-		children[0]->histogram(till_here                 , next_bit-1, hist);
-		children[1]->histogram(till_here | (1<<next_bit) , next_bit-1, hist);
+		children[0]->code_table(till_here                 , next_bit-1, hist);
+		children[1]->code_table(till_here | (1<<next_bit) , next_bit-1, hist);
 		return;
 	}
 };
