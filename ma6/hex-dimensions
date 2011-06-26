@@ -1,0 +1,1 @@
+hexdump -d -v -s 3 -n 4 $1

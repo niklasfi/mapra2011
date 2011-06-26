@@ -1,0 +1,1 @@
+hexdump -c -n 3 $1

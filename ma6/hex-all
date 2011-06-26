@@ -1,0 +1,1 @@
+./hex-magickbits $1; ./hex-dimensions $1; ./hex-histogram $1; ./hex-data $1
