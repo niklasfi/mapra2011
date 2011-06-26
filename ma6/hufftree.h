@@ -1,3 +1,4 @@
+#pragma once
 #include <algorithm>
 
 class huffTree{
@@ -43,22 +44,22 @@ class huffTree{
 		else return (pixelcount < t.pixelcount);
 	}
 	
-	std::vector<std::vector<unsigned char>> code_table(){
+	std::vector<std::vector<unsigned char>> code_table() const{
 		std::vector<std::vector<unsigned char>> hist(256);
 		code_table(0,31,hist);
 		return hist;
 	}
 	
-	void code_table(unsigned int till_here,unsigned char next_bit, std::vector<std::vector<unsigned char>>& hist){
+	void code_table(unsigned int till_here,unsigned char next_bit, std::vector<std::vector<unsigned char>>& hist) const{
 		if(!children){
 			std::vector<unsigned char>& target = hist[color];
-			target.push_back  (till_here & 0xff000000);
+			target.push_back  ((till_here & 0xff000000) >> 24);
 			if(next_bit < 24)
-				target.push_back(till_here & 0x00ff0000);
+				target.push_back((till_here & 0x00ff0000) >> 16);
 			if(next_bit < 16)
-				target.push_back(till_here & 0x0000ff00);
+				target.push_back((till_here & 0x0000ff00) >>  8);
 			if(next_bit < 8)
-				target.push_back(till_here & 0x000000ff);
+				target.push_back( till_here & 0x000000ff       );
 			
 			return;
 		}

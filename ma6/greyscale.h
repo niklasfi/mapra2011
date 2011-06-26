@@ -51,6 +51,9 @@ class GreyScale{
 	
 	Encoding targetEncoding;
 	
+	/* convolveAt berechnet das Ergebnis der Faltung für einen bestimmten Pixel
+	 * (x,y) mit der Maske mask */
+	
 	float convolveAt(int x, int y, const float mask[], int size) const;
 	
 	/* Diese Funktionen Parsen einen entsprechenden Input aus dem Istream, wobei
@@ -63,6 +66,14 @@ class GreyScale{
 	std::istream& parseHuffmanA(std::istream&); //TODO
 	std::istream& parseHuffmanB(std::istream&); //TODO
 	
+	/* Diese Funktionen erstellen eine Repräsentation des Bildes als vector von
+	 * unsigned char (hier wird data konvertiert). optional kann zusätzlich der
+	 * maximalwert in einem Bild berechnet werden. hierzu muss max als referenz
+	 * übergeben werden */
+
+	std::vector<unsigned char> pixmap() const{ unsigned char max; return pixmap(max); }
+	std::vector<unsigned char> pixmap(unsigned char& max) const;
+
 	/* Diese Funktionen schreiben eine komplette Datei inklusive MagicBits */
 	
 	std::ostream& serializeRaw(std::ostream&) const; //TODO

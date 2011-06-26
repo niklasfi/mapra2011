@@ -43,7 +43,7 @@ void Display ( const GreyScale &Pic, int Id, const char Text[] )
 }
 
 
-int main(){
+/*int main(){
 	GreyScale pic;
   fstream   file;
   char      name[] = "Bilder/smalltest.pgm";
@@ -62,6 +62,26 @@ int main(){
 		out << pic;
 		out.close();
 		
+	}
+	file.close();
+	
+	return 0;
+}*/
+
+int main(){
+	GreyScale pic;
+  fstream   file;
+  char      name[] = "result.pgm";
+	
+	file.open(name,ios::in);
+	if (file.rdstate())
+		cerr << "Error: Couldn't open '" << name << "'!\n";
+	else
+	{
+		file >> pic;
+		
+		Display(pic,0,"");
+		sleep(60);
 	}
 	file.close();
 	
