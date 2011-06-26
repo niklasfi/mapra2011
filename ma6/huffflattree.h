@@ -38,11 +38,11 @@ class huffFlatTree{
 		huffFlatTree* next = this;
 		for(unsigned int i = 0; i < query.size(); i++){
 			std::map<unsigned char,huffFlatTree*>::iterator it=next->children.find(query[i]);
-			if(it==next->children.end()){
+			if(it!=next->children.end())
+				next = it->second;
+			else
 				if(create) return next->insertionTraversal(query,i,color);
 				else       return 0;
-			}
-			next = it->second;
 		}
 		return next;
 	}

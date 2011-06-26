@@ -6,8 +6,10 @@
 #include <vector>
 #include <algorithm>
 #include <queue>
+#include <fstream>
 #include "hufftree.h"
 #include "huffflattree.h"
+
 
 GreyScale::GreyScale(int width, int height, Encoding enc):
 	data(width*height),width(width),height(height),targetEncoding(enc){}
@@ -15,6 +17,19 @@ GreyScale::GreyScale(int width, int height, Encoding enc):
 GreyScale::GreyScale(const GreyScale& o):
 	data(o.data),width(o.width),height(o.height),targetEncoding(o.targetEncoding){}
 
+GreyScale::GreyScale(const char filename[]){
+	std::fstream   file;
+	
+	file.open(filename,std::ios::in);
+	if (file.rdstate())
+		assert(false);
+	else
+	{
+		file >> *this;
+	}
+	file.close();
+}
+		
 GreyScale& GreyScale::operator=(const GreyScale& o){
 	Resize(o.width, o.height);
 	
@@ -152,7 +167,11 @@ GreyScale GreyScale::Kirsch() const{
 }
 
 GreyScale GreyScale::Laplace() const{
-	float mask[]{0,-1,0,-1,4,-1,0,-1,0};
+	float mask[]{
+		 0,-1, 0,
+		-1, 4,-1,
+		 0,-1, 0
+	};
 	return Convolve(mask);
 }
 
@@ -168,12 +187,12 @@ GreyScale GreyScale::Median() const{
 	GreyScale g(width, height, targetEncoding);
 	
 	for(int j = 0; j < width; j++)
-		for(int i = 0; i < height; i++){
+		for(int i = 0; i < height; i++){ 
 			for(int x = -1; x <= 1; x++)
 				for(int y = -1; y <= 1; y++)
 					myvals[(y+1)*3+(x+1)] = at(j+x,i+y);
-			std::sort<std::vector<float>::iterator>(myvals.begin(),myvals.end());
-			g(j,i)=myvals[5];
+			std::sort(myvals.begin(),myvals.end());
+			g(j,i)=myvals[4];
 		}
 			
 	return g;
@@ -228,6 +247,19 @@ GreyScale& GreyScale::SetFormat(Encoding enc){
 	return *this;
 }
 
+bool GreyScale::ToFile(const char filename[]){
+  std::fstream   file(filename,std::ios::out | std::ios::trunc | std::ios::binary);
+	if (file.rdstate())
+		assert(false);
+	else
+	{
+		file << *this;
+		if(file.rdstate()) assert(false);
+	}
+	file.close();
+	return true;
+}
+
 bool skipcomment(std::istream& s){	
 	if(s.peek() != '#') return false;
 	while(s.get() != '\n');
@@ -270,23 +302,42 @@ huffTree* buildTree(const std::vector<unsigned short>& histogram){
 	
 	return tree;
 }
+std::vector<unsigned char> huffmanCompress(const std::vector<unsigned char>& pixmap, short width, short height){
+	std::vector<unsigned char> p2(pixmap);
+	for(int i = 1; i < height; i++)
+		for(int j = 1; j < width-1; j++){
+			p2[i*width+j] = (unsigned char)(
+			( 
+				( (short)pixmap[width*(i-1)+j-1]
+				 +(short)pixmap[width*(i-1)+j]
+				 +(short)pixmap[width*(i-1)+j+1]
+				 +(short)pixmap[width*i+j-1]
+				)/4 
+				 - pixmap[width*i+j]
+			)% 256);
+		}
+	return p2;
+}
 std::istream& GreyScale::parseRaw(std::istream& s){
-	s >> width;
+	unsigned int w, h;
+	skip(s);
+	s >> w;
 	if(s.rdstate()) assert(false);
-	s >> height;
+	skip(s);
+	s >> h;
 	if(s.rdstate()) assert(false);
 	
-	{
-		short maxval;
-		s >> maxval;
-		if(maxval > 255) assert(false); //bpm Variante mit shorts
-		if(s.rdstate()) assert(false);
-	}
+	skip(s);
+	short maxval;
+	s >> maxval;
+	if(maxval > 255) assert(false); //bpm Variante mit shorts
+	if(s.rdstate()) assert(false);
+	
+	Resize(w,h);
 	
 	for(int y = 0; y < height; y++)
 		for(int x = 0; x < width; x++){
-			skip(s);
-			(*this)(x,y) = s.get();
+			(*this)(x,y) = s.get()/256.0;
 		}
 	
 	return s;
@@ -314,7 +365,7 @@ std::istream& GreyScale::parseAscii(std::istream& s){
 			skip(s);
 			unsigned int value;
 			s >> value;
-			at(x,y) = (1.0*value)/maxval;
+			at(x,y) = value/255.0;
 			if(s.rdstate()) assert(false);
 		}
 	
@@ -322,7 +373,7 @@ std::istream& GreyScale::parseAscii(std::istream& s){
 	return s;
 }
 
-std::istream& GreyScale::parseHuffmanA(std::istream& is){
+std::istream& GreyScale::parseHuffman(std::istream& is, bool compress){
 	short w, h;
 	is.read((char*)&w, 2);
 	is.read((char*)&h, 2);
@@ -334,23 +385,25 @@ std::istream& GreyScale::parseHuffmanA(std::istream& is){
 		is.read((char*)&histogram[i],2);
 	
 	huffFlatTree root = huffFlatTree(*buildTree(histogram));
+	
+	std::vector<unsigned char> Pixel(width*height);
 		
-	for(int i = 0; i < w * h; i++){
+	for(int i = 0; i < width * height; i++){
 		huffFlatTree* current = &root;
 		while(!current->leaf()){
 			unsigned char read;
 			is.read((char*)&read,1);
 			current = current->traverse(std::vector<unsigned char>(1,read));
 		}
-		data[i] = current->color;
+		Pixel[i] = current->color;
 	}
 	
+	if(compress) Pixel = huffmanCompress(Pixel,width,height);
+	
+	for(unsigned int i = 0; i < Pixel.size(); i++)
+		data[i] = Pixel[i]/256.0;
+	
 	return is;
-}
-
-std::istream& GreyScale::parseHuffmanB(std::istream&){
-	//TODO
-	assert(false);
 }
 
 std::vector<unsigned char> GreyScale::pixmap(unsigned char& max) const{
@@ -359,7 +412,10 @@ std::vector<unsigned char> GreyScale::pixmap(unsigned char& max) const{
 
   for (int j=0; j<width; j++ )      // Fuer alle Bildpunkte ...
     for (int i=0; i<height; i++ ){
-      unsigned char gr=at(j,i)*255+0.5;               // [0,1] auf [0,255] skalieren
+      float gr0=(at(j,i)*255+0.5);               // [0,1] auf [0,255] skalieren
+			if      (gr0 > 255) gr0 = 255;
+			else if (gr0 < 0  ) gr0 = 0;
+			unsigned char gr = gr0;
 			
 			Pixel[j+i*width]=gr; 
 			
@@ -369,12 +425,10 @@ std::vector<unsigned char> GreyScale::pixmap(unsigned char& max) const{
 }
 
 std::ostream& GreyScale::serializeRaw(std::ostream& o) const{
-	unsigned char max;
-	std::vector<unsigned char> Pixel(pixmap(max));
+	std::vector<unsigned char> Pixel(pixmap());
 	
 	o << "P5\n" 
-		<< width << " "<< height << "\n"
-		<< max << "\n";
+		<< width << " "<< height << "\n255\n";
 	
 	for( int i = 0; i < height; i++){
 		for( int j = 0; j < width; j++)
@@ -385,24 +439,35 @@ std::ostream& GreyScale::serializeRaw(std::ostream& o) const{
 }
 
 std::ostream& GreyScale::serializeAscii(std::ostream& o) const{
-	unsigned char max;
-	std::vector<unsigned char> Pixel(pixmap(max));
+	std::vector<unsigned char> Pixel(pixmap());
 	
 	o << "P2\n" 
-		<< width << " "<< height << "\n"
-		<< max << "\n";
+		<< width << " "<< height << "\n255\n";
 	
-	for( int i = 0; i < height; i++){
+	for(unsigned int i = 0; i < data.size(); i++){
+		o << " ";
+		o.fill(' ');
+		o.width(3);
+		o <<(int)Pixel[i];
+		if((i+1) % 16 == 0) o << "\n";
+	}
+	
+	o << "\n";
+	
+	/*for( int i = 0; i < height; i++){
 		for( int j = 0; j < width; j++)
 			o << (int)Pixel[j + i*width] << " ";
 		o << "\n";
-	}
+	}*/
 		
 	return o;
 }
 
 std::ostream& GreyScale::serializeHuffman(std::ostream& o, bool compress) const{
 	std::vector<unsigned char> Pixel(pixmap());
+	
+	if(compress) Pixel = huffmanCompress(Pixel,width,height);
+	
 	std::vector<unsigned short> histogram(256,0);
 	for(unsigned int i = 0; i < data.size(); i++){
 		histogram[Pixel[i]]++;
@@ -410,7 +475,10 @@ std::ostream& GreyScale::serializeHuffman(std::ostream& o, bool compress) const{
 	
 	std::vector<std::vector<unsigned char>> outmap = buildTree(histogram)->code_table();
 		
-	o << "MHa";
+	o << "MH";
+	
+	if(compress) o << "b";
+	else         o << "a";
 	
 	o.write((char*)&width, 2);
 	o.write((char*)&height,2);
@@ -421,7 +489,6 @@ std::ostream& GreyScale::serializeHuffman(std::ostream& o, bool compress) const{
 		o.write((char*) &histogram[i],2);
 	
 	o.flush();
-	
 	for(int i = 0; i < width * height; i++){
 		std::vector<unsigned char>& val = outmap[Pixel[i]];
 		for(unsigned int j = 0; j < val.size(); j++)
@@ -455,9 +522,9 @@ std::istream& operator>>(std::istream& s, GreyScale& x){
 	else if(magic == 'M' && s.get() == 'H'){
 		magic = s.get();
 		if( magic == 'a')
-			return x.parseHuffmanA(s);
+			return x.parseHuffman(s,false);
 		else if( magic == 'b')
-			return x.parseHuffmanB(s);
+			return x.parseHuffman(s,true);
 		else assert(false);
 	}
 	return s;

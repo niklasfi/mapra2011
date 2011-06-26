@@ -9,6 +9,7 @@ class GreyScale{
 	
 	GreyScale(int width = 0, int height = 0, Encoding = Raw);
 	GreyScale(const GreyScale&);
+	GreyScale(const char filename[]);
 	~GreyScale(){};
 	
 	GreyScale& operator=(const GreyScale&);
@@ -43,6 +44,8 @@ class GreyScale{
 	unsigned int GetFormat() const;
 	GreyScale& SetFormat(Encoding);
 	
+	bool ToFile(const char filename[]);
+	
 	private:
 	
 	std::vector<float> data;
@@ -63,9 +66,8 @@ class GreyScale{
 	
 	std::istream& parseRaw(std::istream&);
 	std::istream& parseAscii(std::istream&); //TODO
-	std::istream& parseHuffmanA(std::istream&); //TODO
-	std::istream& parseHuffmanB(std::istream&); //TODO
-	
+	std::istream& parseHuffman(std::istream&,bool compress= false); //TODO
+
 	/* Diese Funktionen erstellen eine Repräsentation des Bildes als vector von
 	 * unsigned char (hier wird data konvertiert). optional kann zusätzlich der
 	 * maximalwert in einem Bild berechnet werden. hierzu muss max als referenz
