@@ -1,1 +1,1 @@
-hexdump -v -n 512 -s 7 -d $1
+hexdump -v -n 1024 -s 7 -d $1

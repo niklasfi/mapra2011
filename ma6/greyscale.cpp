@@ -397,7 +397,7 @@ std::istream& GreyScale::parseHuffman(std::istream& is, bool compress){
 	
 	std::vector<unsigned int> histogram(256);
 	for(unsigned int i = 0; i < histogram.size(); i++)
-		is.read((char*)&histogram[i],2);
+		is.read((char*)&histogram[i],4);
 	
 	huffTree& root = *buildTree(histogram);
 	
@@ -510,7 +510,7 @@ std::ostream& GreyScale::serializeHuffman(std::ostream& o, bool compress) const{
 	o.flush();
 	
 	for(unsigned int i = 0; i < histogram.size(); i++)
-		o.write((char*) &histogram[i],2);
+		o.write((char*) &histogram[i],4);
 	
 	o.flush();
 	
