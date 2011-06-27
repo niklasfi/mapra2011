@@ -284,7 +284,7 @@ struct huffTree_compare : public std::binary_function<huffTree*, huffTree*, bool
 		return *b < *a;
 	}
 };
-huffTree* buildTree(const std::vector<unsigned short>& histogram){
+huffTree* buildTree(const std::vector<unsigned int>& histogram){
 	std::priority_queue<huffTree*, std::vector<huffTree*>, huffTree_compare> q;
 	
 	for(unsigned int i = 0; i < histogram.size(); i++)
@@ -395,7 +395,7 @@ std::istream& GreyScale::parseHuffman(std::istream& is, bool compress){
 	
 	Resize(w,h);
 	
-	std::vector<unsigned short> histogram(256);
+	std::vector<unsigned int> histogram(256);
 	for(unsigned int i = 0; i < histogram.size(); i++)
 		is.read((char*)&histogram[i],2);
 	
@@ -492,7 +492,7 @@ std::ostream& GreyScale::serializeHuffman(std::ostream& o, bool compress) const{
 	
 	if(compress) Pixel = huffmanCompress(Pixel,width,height);
 	
-	std::vector<unsigned short> histogram(256,0);
+	std::vector<unsigned int> histogram(256,0);
 	for(unsigned int i = 0; i < data.size(); i++){
 		histogram[Pixel[i]]++;
 	}
