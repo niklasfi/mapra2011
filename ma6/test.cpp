@@ -11,7 +11,7 @@ using namespace std;
 
 // globale Konstanten, die die Darstellung des Bildes kontrollieren
 
-int  ZoomFac=4;  // Vergroesserungsfaktor
+int  ZoomFac=1;  // Vergroesserungsfaktor
 bool Show=true;  // Bild anzeigen oder nicht
 
 

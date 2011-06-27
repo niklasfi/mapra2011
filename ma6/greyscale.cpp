@@ -302,7 +302,7 @@ huffTree* buildTree(const std::vector<unsigned short>& histogram){
 	
 	return tree;
 }
-std::vector<unsigned char> huffmanCompress(const std::vector<unsigned char>& pixmap, short width, short height){
+std::vector<unsigned char> huffmanDecompress(const std::vector<unsigned char>& pixmap, short width, short height){
 	std::vector<unsigned char> p2(pixmap);
 	for(int i = 1; i < height; i++)
 		for(int j = 1; j < width-1; j++){
@@ -318,6 +318,22 @@ std::vector<unsigned char> huffmanCompress(const std::vector<unsigned char>& pix
 		}
 	return p2;
 }
+std::vector<unsigned char> huffmanCompress(std::vector<unsigned char>& pixmap, short width, short height){
+	for(int i = 1; i < height; i++)
+		for(int j = 1; j < width-1; j++){
+			pixmap[i*width+j] = (unsigned char)(
+			( 
+				( (short)pixmap[width*(i-1)+j-1]
+				 +(short)pixmap[width*(i-1)+j]
+				 +(short)pixmap[width*(i-1)+j+1]
+				 +(short)pixmap[width*i+j-1]
+				)/4 
+				 - pixmap[width*i+j]
+			)% 256);
+		}
+	return pixmap;
+}
+
 std::istream& GreyScale::parseRaw(std::istream& s){
 	unsigned int w, h;
 	skip(s);
@@ -398,7 +414,7 @@ std::istream& GreyScale::parseHuffman(std::istream& is, bool compress){
 		Pixel[i] = current->color;
 	}
 	
-	if(compress) Pixel = huffmanCompress(Pixel,width,height);
+	if(compress) Pixel = huffmanDecompress(Pixel,width,height);
 	
 	for(unsigned int i = 0; i < Pixel.size(); i++)
 		data[i] = Pixel[i]/256.0;
