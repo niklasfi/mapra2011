@@ -1,6 +1,10 @@
 CC    = g++
 FLAGS = -g -Wall --std=c++0x
 
+ifdef O3
+	FLAGS += -O3
+endif
+
 ifeq ($(shell uname -p | grep -o "64"),64)
 	ARCH=64
 else
