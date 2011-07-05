@@ -8,7 +8,6 @@
 #include <queue>
 #include <fstream>
 #include "hufftree.h"
-#include "huffflattree.h"
 
 
 GreyScale::GreyScale(int width, int height, Encoding enc):
@@ -285,7 +284,7 @@ struct huffTree_compare : public std::binary_function<huffTree*, huffTree*, bool
 		return *b < *a;
 	}
 };
-huffTree* buildTree(const std::vector<unsigned short>& histogram){
+huffTree* buildTree(const std::vector<unsigned int>& histogram){
 	std::priority_queue<huffTree*, std::vector<huffTree*>, huffTree_compare> q;
 	
 	for(unsigned int i = 0; i < histogram.size(); i++)
@@ -396,20 +395,27 @@ std::istream& GreyScale::parseHuffman(std::istream& is, bool compress){
 	
 	Resize(w,h);
 	
-	std::vector<unsigned short> histogram(256);
+	std::vector<unsigned int> histogram(256);
 	for(unsigned int i = 0; i < histogram.size(); i++)
-		is.read((char*)&histogram[i],2);
+		is.read((char*)&histogram[i],4);
 	
-	huffFlatTree root = huffFlatTree(*buildTree(histogram));
+	huffTree& root = *buildTree(histogram);
 	
 	std::vector<unsigned char> Pixel(width*height);
-		
+	
+	unsigned char byte;
+	
+	int curbit = -1;
+	
 	for(int i = 0; i < width * height; i++){
-		huffFlatTree* current = &root;
-		while(!current->leaf()){
-			unsigned char read;
-			is.read((char*)&read,1);
-			current = current->traverse(std::vector<unsigned char>(1,read));
+		huffTree* current = &root;
+		while(!current->is_leaf()){
+			if(curbit == -1){
+				is.read((char*)&byte,1);
+				curbit = 7;
+			}
+			bool thisbit = (byte >> curbit--) % 2;
+			current = current->traverse(thisbit);
 		}
 		Pixel[i] = current->color;
 	}
@@ -418,6 +424,8 @@ std::istream& GreyScale::parseHuffman(std::istream& is, bool compress){
 	
 	for(unsigned int i = 0; i < Pixel.size(); i++)
 		data[i] = Pixel[i]/256.0;
+	
+	delete &root;
 	
 	return is;
 }
@@ -484,12 +492,12 @@ std::ostream& GreyScale::serializeHuffman(std::ostream& o, bool compress) const{
 	
 	if(compress) Pixel = huffmanCompress(Pixel,width,height);
 	
-	std::vector<unsigned short> histogram(256,0);
-	for(unsigned int i = 0; i < data.size(); i++){
+	std::vector<unsigned int> histogram(256,0);
+	for(unsigned int i = 0; i < Pixel.size(); i++){
 		histogram[Pixel[i]]++;
 	}
 	
-	std::vector<std::vector<unsigned char>> outmap = buildTree(histogram)->code_table();
+	std::vector<std::vector<bool>> outmap = buildTree(histogram)->code_table();
 		
 	o << "MH";
 	
@@ -499,17 +507,25 @@ std::ostream& GreyScale::serializeHuffman(std::ostream& o, bool compress) const{
 	o.write((char*)&width, 2);
 	o.write((char*)&height,2);
 	
-	o.flush();
-	
 	for(unsigned int i = 0; i < histogram.size(); i++)
-		o.write((char*) &histogram[i],2);
+		o.write((char*) &histogram[i],4);
 	
-	o.flush();
+	unsigned char curbyte = 0;
+		int curpos = 7;
+	
 	for(int i = 0; i < width * height; i++){
-		std::vector<unsigned char>& val = outmap[Pixel[i]];
-		for(unsigned int j = 0; j < val.size(); j++)
-			o.write((char*) &val[j],1);
+		std::vector<bool>& val = outmap[Pixel[i]];
+		
+		for(unsigned int j = 0; j < val.size(); j++){
+			curbyte |= val[j] << curpos--;
+			if(curpos == -1){
+				o.write((char*) &curbyte,1);
+				curbyte = 0; curpos = 7;
+			}
+		}
 	}
+	if(curpos!=7)
+			o.write((char*) &curbyte,1);
 	
 	return o;
 }

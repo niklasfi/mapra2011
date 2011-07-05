@@ -44,28 +44,31 @@ class huffTree{
 		else return (pixelcount < t.pixelcount);
 	}
 	
-	std::vector<std::vector<unsigned char>> code_table() const{
-		std::vector<std::vector<unsigned char>> hist(256);
-		code_table(0,31,hist);
+	std::vector<std::vector<bool>> code_table() const{
+		std::vector<std::vector<bool>> hist(256);
+		code_table(std::vector<bool>(),hist);
 		return hist;
 	}
 	
-	void code_table(unsigned int till_here,unsigned char next_bit, std::vector<std::vector<unsigned char>>& hist) const{
+	void code_table(std::vector<bool> here, std::vector<std::vector<bool>>& hist) const{
 		if(!children){
-			std::vector<unsigned char>& target = hist[color];
-			target.push_back  ((till_here & 0xff000000) >> 24);
-			if(next_bit < 24)
-				target.push_back((till_here & 0x00ff0000) >> 16);
-			if(next_bit < 16)
-				target.push_back((till_here & 0x0000ff00) >>  8);
-			if(next_bit < 8)
-				target.push_back( till_here & 0x000000ff       );
-			
+			hist[color] = here;
 			return;
 		}
 
-		children[0]->code_table(till_here                 , next_bit-1, hist);
-		children[1]->code_table(till_here | (1<<next_bit) , next_bit-1, hist);
+		std::vector<bool> here0(here), here1(here);
+		here0.push_back(0); here1.push_back(1);
+
+		children[0]->code_table(here0, hist);
+		children[1]->code_table(here1 ,hist);
 		return;
+	}
+	
+	huffTree* traverse(bool query){
+		return children[(int) query];
+	}
+	
+	bool is_leaf(){
+		return !children;
 	}
 };
