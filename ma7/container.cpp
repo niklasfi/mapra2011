@@ -138,8 +138,10 @@ Container& Container::iterate(std::ostream& o){
 			save_result();
 		}
 		cycles_cur++;
-		o << *this;
+		if(cycles_cur % output_interval == 0) o << *this;
 	}
+	if(cycles_cur % output_interval != 0) o << *this;
+	
 	
 	return *this;
 }
