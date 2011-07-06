@@ -46,21 +46,21 @@ class huffTree{
 	
 	std::vector<std::vector<bool>> code_table() const{
 		std::vector<std::vector<bool>> hist(256);
-		code_table(0,31,hist);
+		code_table(std::vector<bool>(),hist);
 		return hist;
 	}
 	
-	void code_table(unsigned int till_here,unsigned char next_bit, std::vector<std::vector<bool>>& hist) const{
+	void code_table(std::vector<bool> here, std::vector<std::vector<bool>>& hist) const{
 		if(!children){
-			std::vector<bool>& target = hist[color];
-			for(int i = 31; i > next_bit; i--)
-				target.push_back (( till_here & (1 << i)) >> next_bit);
-			
+			hist[color] = here;
 			return;
 		}
 
-		children[0]->code_table(till_here                 , next_bit-1, hist);
-		children[1]->code_table(till_here | (1<<next_bit) , next_bit-1, hist);
+		std::vector<bool> here0(here), here1(here);
+		here0.push_back(0); here1.push_back(1);
+
+		children[0]->code_table(here0, hist);
+		children[1]->code_table(here1 ,hist);
 		return;
 	}
 	

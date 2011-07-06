@@ -1,9 +1,9 @@
 #include "test.cpp"
 
 void firstA(){
-	//GreyScale pic1("bilder/roentgen.pgm");
-	//pic1.SetFormat(GreyScale::Raw)
-	//	.ToFile("output/result12.pgm");
+	GreyScale pic1("bilder/roentgen.pgm");
+	pic1.SetFormat(GreyScale::Raw)
+		.ToFile("output/result12.pgm");
 	GreyScale pic2("output/result12.pgm");
 	Display(pic2,1,"new file");
 	//sleep(1);
