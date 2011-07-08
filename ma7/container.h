@@ -40,7 +40,6 @@ struct Container{
 
 	unsigned int incount();
 	
-	Container& iterate();
 	Container& iterate(std::ostream& o);
 	Container& save_result();
 

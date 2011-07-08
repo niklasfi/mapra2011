@@ -129,8 +129,8 @@ Container& Container::iterate(std::ostream& o){
 	while(add(true));
 
 	save_result();
-	
-	o << *this;
+	o << "[\n";
+	o << *this << ",\n"	;
 
 	while(cycles_cur < cycles_max){
 		if(!add()) drop();
@@ -138,10 +138,13 @@ Container& Container::iterate(std::ostream& o){
 			save_result();
 		}
 		cycles_cur++;
-		if(cycles_cur % output_interval == 0) o << *this;
+		if(cycles_cur % output_interval == 0)
+			 o << *this << ",\n";
 	}
-	if(cycles_cur % output_interval != 0) o << *this;
+	if(cycles_cur % output_interval != 0) o << *this << ",\n";
+	else o << "[]\n";
 	
+	o << "]";	
 	
 	return *this;
 }

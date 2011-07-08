@@ -1,0 +1,218 @@
+[
+{"cycle": 1,
+	"used":	"20/20",
+	"c$":	35,
+	"inside": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 11,	"weight": 8,	"cycle": -2147483648	},
+		 {	"value": 10,	"weight": 7,	"cycle": -2147483648	}
+	],
+	"outside": [
+		 {	"value": 9,	"weight": 6,	"cycle": -2147483648	},
+		 {	"value": 8,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 8,	"weight": 3,	"cycle": -2147483648	}
+	],
+	"b$":	35,
+	"best": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 11,	"weight": 8,	"cycle": -2147483648	},
+		 {	"value": 10,	"weight": 7,	"cycle": -2147483648	}
+	]
+}
+,
+{"cycle": 2,
+	"used":	"13/20",
+	"c$":	25,
+	"inside": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 11,	"weight": 8,	"cycle": -2147483648	}
+	],
+	"outside": [
+		 {	"value": 10,	"weight": 7,	"cycle": 1	},
+		 {	"value": 9,	"weight": 6,	"cycle": -2147483648	},
+		 {	"value": 8,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 8,	"weight": 3,	"cycle": -2147483648	}
+	],
+	"b$":	35,
+	"best": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 11,	"weight": 8,	"cycle": -2147483648	},
+		 {	"value": 10,	"weight": 7,	"cycle": -2147483648	}
+	]
+}
+,
+{"cycle": 3,
+	"used":	"19/20",
+	"c$":	34,
+	"inside": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 11,	"weight": 8,	"cycle": -2147483648	},
+		 {	"value": 9,	"weight": 6,	"cycle": 2	}
+	],
+	"outside": [
+		 {	"value": 10,	"weight": 7,	"cycle": 1	},
+		 {	"value": 8,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 8,	"weight": 3,	"cycle": -2147483648	}
+	],
+	"b$":	35,
+	"best": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 11,	"weight": 8,	"cycle": -2147483648	},
+		 {	"value": 10,	"weight": 7,	"cycle": -2147483648	}
+	]
+}
+,
+{"cycle": 4,
+	"used":	"11/20",
+	"c$":	23,
+	"inside": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 9,	"weight": 6,	"cycle": 2	}
+	],
+	"outside": [
+		 {	"value": 11,	"weight": 8,	"cycle": 3	},
+		 {	"value": 10,	"weight": 7,	"cycle": 1	},
+		 {	"value": 8,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 8,	"weight": 3,	"cycle": -2147483648	}
+	],
+	"b$":	35,
+	"best": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 11,	"weight": 8,	"cycle": -2147483648	},
+		 {	"value": 10,	"weight": 7,	"cycle": -2147483648	}
+	]
+}
+,
+{"cycle": 5,
+	"used":	"14/20",
+	"c$":	31,
+	"inside": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 9,	"weight": 6,	"cycle": 2	},
+		 {	"value": 8,	"weight": 3,	"cycle": 4	}
+	],
+	"outside": [
+		 {	"value": 10,	"weight": 7,	"cycle": 1	},
+		 {	"value": 8,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 11,	"weight": 8,	"cycle": 3	}
+	],
+	"b$":	35,
+	"best": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 11,	"weight": 8,	"cycle": -2147483648	},
+		 {	"value": 10,	"weight": 7,	"cycle": -2147483648	}
+	]
+}
+,
+{"cycle": 6,
+	"used":	"19/20",
+	"c$":	39,
+	"inside": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 9,	"weight": 6,	"cycle": 2	},
+		 {	"value": 8,	"weight": 3,	"cycle": 4	},
+		 {	"value": 8,	"weight": 5,	"cycle": 5	}
+	],
+	"outside": [
+		 {	"value": 10,	"weight": 7,	"cycle": 1	},
+		 {	"value": 11,	"weight": 8,	"cycle": 3	}
+	],
+	"b$":	39,
+	"best": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 9,	"weight": 6,	"cycle": 2	},
+		 {	"value": 8,	"weight": 3,	"cycle": 4	},
+		 {	"value": 8,	"weight": 5,	"cycle": 5	}
+	]
+}
+,
+{"cycle": 7,
+	"used":	"13/20",
+	"c$":	30,
+	"inside": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 8,	"weight": 5,	"cycle": 5	},
+		 {	"value": 8,	"weight": 3,	"cycle": 4	}
+	],
+	"outside": [
+		 {	"value": 9,	"weight": 6,	"cycle": 6	},
+		 {	"value": 10,	"weight": 7,	"cycle": 1	},
+		 {	"value": 11,	"weight": 8,	"cycle": 3	}
+	],
+	"b$":	39,
+	"best": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 9,	"weight": 6,	"cycle": 2	},
+		 {	"value": 8,	"weight": 3,	"cycle": 4	},
+		 {	"value": 8,	"weight": 5,	"cycle": 5	}
+	]
+}
+,
+{"cycle": 8,
+	"used":	"20/20",
+	"c$":	40,
+	"inside": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 8,	"weight": 5,	"cycle": 5	},
+		 {	"value": 8,	"weight": 3,	"cycle": 4	},
+		 {	"value": 10,	"weight": 7,	"cycle": 7	}
+	],
+	"outside": [
+		 {	"value": 9,	"weight": 6,	"cycle": 6	},
+		 {	"value": 11,	"weight": 8,	"cycle": 3	}
+	],
+	"b$":	40,
+	"best": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 8,	"weight": 5,	"cycle": 5	},
+		 {	"value": 8,	"weight": 3,	"cycle": 4	},
+		 {	"value": 10,	"weight": 7,	"cycle": 7	}
+	]
+}
+,
+{"cycle": 9,
+	"used":	"17/20",
+	"c$":	32,
+	"inside": [	
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 8,	"weight": 5,	"cycle": 5	},
+		 {	"value": 10,	"weight": 7,	"cycle": 7	}
+	],
+	"outside": [
+		 {	"value": 8,	"weight": 3,	"cycle": 8	},
+		 {	"value": 9,	"weight": 6,	"cycle": 6	},
+		 {	"value": 11,	"weight": 8,	"cycle": 3	}
+	],
+	"b$":	40,
+	"best": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 8,	"weight": 5,	"cycle": 5	},
+		 {	"value": 8,	"weight": 3,	"cycle": 4	},
+		 {	"value": 10,	"weight": 7,	"cycle": 7	}
+	]
+}
+,
+{"cycle": 10,
+	"used":	"12/20",
+	"c$":	24,
+	"inside": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 10,	"weight": 7,	"cycle": 7	}
+	],
+	"outside": [
+		 {	"value": 8,	"weight": 5,	"cycle": 9	},
+		 {	"value": 8,	"weight": 3,	"cycle": 8	},
+		 {	"value": 9,	"weight": 6,	"cycle": 6	},
+		 {	"value": 11,	"weight": 8,	"cycle": 3	}
+	],
+	"b$":	40,
+	"best": [
+		 {	"value": 14,	"weight": 5,	"cycle": -2147483648	},
+		 {	"value": 8,	"weight": 5,	"cycle": 5	},
+		 {	"value": 8,	"weight": 3,	"cycle": 4	},
+		 {	"value": 10,	"weight": 7,	"cycle": 7	}
+	]
+}
+,
+[]
+]
